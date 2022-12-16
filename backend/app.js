@@ -12,6 +12,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
+const routes = require('./routes');
 
 if(!isProduction) {
     app.use(cors());
@@ -31,7 +32,6 @@ app.use(
         }
     })
 )
-const routes = require('./routes');
 
 // ...
 
