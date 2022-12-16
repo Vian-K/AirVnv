@@ -29,8 +29,8 @@ const { handleValidationErrors } = require('../../utils/validation');
     '/',
     validateSignup,
     async (req, res) => {
-      const { email, password, username } = req.body;
-      const user = await User.signup({ email, username, password });
+      const { firstName, lastName, email, password, username } = req.body;
+      const user = await User.signup({ firstName, lastName, email, username, password });
 
       await setTokenCookie(res, user);
 
@@ -40,5 +40,21 @@ const { handleValidationErrors } = require('../../utils/validation');
     }
   );
 
-// jqgtjawj-kcvuX0_qCpPnhKZS07zEGs0cBDc
+// HSjmL1xt-jVtUUq8CJZE7XJ12r4tkpA84YeA
 module.exports = router;
+
+
+// fetch('/api/users', {
+//     method: 'POST',
+//     headers: {
+//       "Content-Type": "application/json",
+//       "XSRF-TOKEN": `9TrXH82P-VQRHRfHcDniHyG0zw1jqaDrBmBQ`
+//     },
+//     body: JSON.stringify({
+//         firstName: 'vian',
+//         lastName: 'Khach',
+//       email: 'tester123@google.com',
+//       username: 'viankhach',
+//       password: 'asdasds'
+//     })
+//   }).then(res => res.json()).then(data => console.log(data));
