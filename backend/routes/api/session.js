@@ -4,6 +4,7 @@ const { User } = require('../../db/models');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
+const { INTEGER, DATE } = require('sequelize');
 
 
 
@@ -82,3 +83,5 @@ router.get('/', restoreUser, (req, res) => {
 module.exports = router;
 
 // L2CADJyC-5v4L3GXA72olBA3QCkKtvkg9cmA
+
+// npx sequelize-cli model:generate --name SpotImage --attributes spotId:INTEGER,url:STRING,preview:BOOLEAN,createdAt:DATE,updatedAt:DATE
