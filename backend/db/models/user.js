@@ -1,5 +1,5 @@
 'use strict';
-const bcrypt = require('bcryptjs');1
+const bcrypt = require('bcryptjs');
 const {
   Model,
   Validator

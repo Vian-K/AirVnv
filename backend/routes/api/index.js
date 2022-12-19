@@ -9,6 +9,8 @@ router.use('/session', sessionRouter);
 
 router.use('/users', usersRouter);
 
+// router.use('/spots', spotsRouter)
+
 // router.post('/test', function(req, res) {
 //     res.json({ requestBody: req.body });
 // });
