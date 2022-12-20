@@ -24,11 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isAlphanumeric: true,
-        // checkAddress(value){
-        //   if(value.startsWith(isNan())){
-        //     throw new Error('Address must start with a number')
-        //   }
-        // }
+        checkAddress(value){
+          let wordsSplit = value.split(' ')
+        if(!isNaN(wordsSplit[0])) {
+          throw new Error('Invalid Address')
+        }
+      }
       }
     },
     city: {
@@ -116,11 +117,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     createdAt: {
       type: DataTypes.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+
     },
     updatedAt:  {
       type: DataTypes.DATE,
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+
     },
   }, {
     sequelize,
