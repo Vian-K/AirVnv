@@ -37,6 +37,19 @@ module.exports = {
           description: "this is a tester",
           price: 123,
 
+        },
+        {
+          ownerId: 3,
+          address: "12345 tester",
+          city: "tester3",
+          state: "test3",
+          country: "Testercountry3" ,
+          lat: 35.0000002,
+          lng: 36.000002,
+          name: "tester3",
+          description: "this is a tester",
+          price: 1234,
+
         }
       ], {})
 
@@ -48,7 +61,7 @@ module.exports = {
     await queryInterface.bulkDelete(
       options,
       {
-        name: { [Op.in]: ["tester1", "tester2"]}
+        name: { [Op.in]: ["tester1", "tester2", "tester3"]}
       }
     )
 
