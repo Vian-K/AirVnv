@@ -44,6 +44,24 @@ module.exports = (sequelize, DataTypes) => {
     }
     static associate(models) {
       // define association here
+      User.belongsToMany(
+        models.Spot,
+         { through: models.Booking,
+          otherKey: 'spotId',
+          foreignKey: 'userId'
+        })
+        User.hasMany(
+          models.Review,
+          {
+            foreignKey: 'userId', onDelete: 'CASCADE', hooks: true
+          }
+        )
+          User.hasMany(
+            models.Spot,
+            {
+              foreignKey: 'ownerId', onDelete: 'CASCADE', hooks: true
+            }
+          )
     }
   }
   User.init({
@@ -98,8 +116,14 @@ module.exports = (sequelize, DataTypes) => {
       loginUser: {
         attributes: {}
       }
+    },
+    ownerId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Spots",
+        key: 'id'
+      }
     }
-
   });
   return User;
 };
