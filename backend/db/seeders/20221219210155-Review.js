@@ -14,18 +14,21 @@ module.exports = {
       options,
       [
         {
+          reviewId:1,
           userId: 1,
           spotId: 1,
           review: "This was an awesome spot!",
           stars: 5,
         },
         {
+          reviewId:2,
           userId: 2,
           spotId: 2,
           review: "This was an awesome spot!",
           stars: 5,
         },
         {
+          reviewId:3,
           userId: 3,
           spotId: 3,
           review: "This was an awesome spot!",

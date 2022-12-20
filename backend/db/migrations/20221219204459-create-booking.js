@@ -17,8 +17,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER
-      },
+        type: Sequelize.INTEGER,
+        allowNull: false,
+           references: {
+             model: "Users",
+             key: 'id'
+           },
+           onDelete:'CASCADE'
+       },
       startDate: {
         type: Sequelize.DATE
       },
@@ -34,7 +40,8 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      }
+      },
+
 
     }, options);
   },

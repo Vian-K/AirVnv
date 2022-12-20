@@ -13,15 +13,37 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      reviewId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Reviews",
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
+      },
       spotId: {
-        type: Sequelize.INTEGER
-      },
-      userId: {
-        type: Sequelize.INTEGER
-      },
+       type: Sequelize.INTEGER,
+       allowNull: false,
+          references: {
+            model: "Spots",
+            key: 'id'
+          },
+          onDelete:'CASCADE'
+        },
+        userId: {
+           type: Sequelize.INTEGER,
+           allowNull: false,
+              references: {
+                model: "Users",
+                key: 'id'
+              },
+              onDelete:'CASCADE'
+          },
       review: {
-        type: Sequelize.STRING
-      },
+        type: Sequelize.STRING,
+        allowNull: false,
+     },
       stars: {
         type: Sequelize.INTEGER
       },
