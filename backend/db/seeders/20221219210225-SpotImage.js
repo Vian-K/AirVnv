@@ -8,15 +8,31 @@ if (process.env.NODE_ENV === "production") {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+    options.tableName = "SpotImages"
+    await queryInterface.bulkInsert(
+      options,
+      [
+        {
+          spotId: 1,
+          url: "1234",
+          preview: true
+
+        },
+        {
+          spotId: 2,
+          url: "12345",
+          preview: true
+
+        },
+        {
+          spotId: 3,
+          url: "123456",
+          preview: true
+
+        }
+      ]
+    )
+
   },
 
   async down (queryInterface, Sequelize) {

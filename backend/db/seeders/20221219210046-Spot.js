@@ -13,7 +13,7 @@ module.exports = {
       [
         {
           ownerId: 1,
-          address: "123 tester",
+          address: "abc123 tester",
           city: "tester",
           state: "test",
           country: "Testercountry" ,
@@ -27,15 +27,28 @@ module.exports = {
         },
         {
           ownerId: 2,
-          address: "1234 tester",
+          address: "_!1234 tester",
           city: "tester2",
           state: "test2",
           country: "Testercountry2" ,
           lat: 35.0000002,
           lng: 36.000002,
           name: "tester2",
-          description: "this is a tester",
+          description: "this is a tester2",
           price: 123,
+
+        },
+        {
+          ownerId: 3,
+          address: " ??? tester ave",
+          city: "tester3",
+          state: "test3",
+          country: "Testercountry3" ,
+          lat: 35.00000023,
+          lng: 36.0000023,
+          name: "tester3",
+          description: "this is a tester3",
+          price: 1234,
 
         }
       ], {})
@@ -48,7 +61,7 @@ module.exports = {
     await queryInterface.bulkDelete(
       options,
       {
-        name: { [Op.in]: ["tester1", "tester2"]}
+        name: { [Op.in]: ["tester1", "tester2", "tester3"]}
       }
     )
 

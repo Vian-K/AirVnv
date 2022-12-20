@@ -20,7 +20,16 @@ module.exports = {
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          isAlphanumeric: true,
+          checkAddress(value){
+            let wordsSplit = value.split(' ')
+          if(!isNaN(wordsSplit[0])) {
+            throw new Error('Invalid Address')
+          }
+        }
+        }
       },
       city: {
         type: Sequelize.STRING,

@@ -26,10 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         isAlphanumeric: true,
         checkAddress(value){
           let wordsSplit = value.split(' ')
-        return(!isNaN(wordsSplit[0]))
-
+        if(!isNaN(wordsSplit[0])) {
+          throw new Error('Invalid Address')
+        }
       }
-
       }
     },
     city: {
