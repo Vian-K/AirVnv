@@ -20,15 +20,15 @@ module.exports = (sequelize, DataTypes) => {
   }
   Review.init({
 
-    reviewId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Reviews",
-        key: 'id'
-      },
+    // reviewId: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   references: {
+    //     model: "Reviews",
+    //     key: 'id'
+    //   },
 
-    },
+    // },
     spotId: {
      type: DataTypes.INTEGER,
      allowNull: false,

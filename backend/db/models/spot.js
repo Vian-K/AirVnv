@@ -41,15 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isAlpha: true,
-        // checkUpperCase(value){
-        //   let word = value.split('')
-        //   word.forEach(letter => {
-        //     if(!letter[0].isUpperCase()) {
-        //       throw new Error('Capitilize letter')
-        //     }
 
-        //   })
-        // }
       }
     },
     state: {
@@ -57,15 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isAlpha: true,
-        // checkUpperCase(value){
-        //   let word = value.split('')
-        //   word.forEach(letter => {
-        //     if(!letter[0].isUpperCase()) {
-        //       throw new Error('Capitilize letter')
-        //     }
 
-        //   })
-        // }
       }
     },
     country: {
@@ -73,15 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isAlpha: true,
-        // checkUpperCase(value){
-        //   let word = value.split('')
-        //   word.forEach(letter => {
-        //     if(!letter[0].isUpperCase()) {
-        //       throw new Error('Capitilize letter')
-        //     }
-
-        //   })
-        // }
+  
       }
     },
     lat: {
