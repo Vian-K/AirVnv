@@ -14,17 +14,17 @@ module.exports = {
       [
         {
           reviewId: 1,
-          url: 123,
+          url: "123",
 
         },
         {
-          reviewId: 1,
-          url: 1234,
+          reviewId: 2,
+          url: "1234",
 
         },
         {
-          reviewId: 1,
-          url: 12345,
+          reviewId: 3,
+          url: "12345",
 
         },
       ]
@@ -37,7 +37,7 @@ const Op = Sequelize.Op
 await queryInterface.bulkDelete(
   options,
   {
-    url: { [Op.in]: [123 , 1234, 12345]}
+    url: { [Op.in]: ["123" , "1234", "12345"]}
   }
 )
   }

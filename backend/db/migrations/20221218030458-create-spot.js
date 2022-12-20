@@ -15,8 +15,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       ownerId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+       type: Sequelize.INTEGER,
+          references: {
+            model: "Users",
+            key: 'id'
+          },
+          onDelete:'CASCADE'
       },
       address: {
         type: Sequelize.STRING,
@@ -73,7 +77,7 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false
 
-      }
+      },
     }, options);
   },
   async down(queryInterface, Sequelize) {

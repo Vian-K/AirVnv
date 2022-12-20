@@ -16,15 +16,15 @@ module.exports = {
         {
           userId: 1,
           spotId: 1,
-          startDate: 12-19-2022,
-          endDate: 12-19-2022
+          startDate: "12-19-2022",
+          endDate: "12-19-2022"
 
         },
         {
           userId: 2,
           spotId: 2,
-          startDate: 12-19-2022,
-          endDate: 12-19-2022
+          startDate: "12-19-2022",
+          endDate: "12-19-2022"
 
         }
       ]
