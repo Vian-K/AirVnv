@@ -7,9 +7,9 @@ if (process.env.NODE_ENV === "production") {
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     options.tableName = "SpotImages"
-    await queryInterface.bulkInsert(
+    return queryInterface.bulkInsert(
       options,
       [
         {
@@ -35,12 +35,14 @@ module.exports = {
 
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-  }
+  down: async (queryInterface, Sequelize) => {
+    options.tableName = "SpotImages"
+    const Op = Sequelize.Op
+    return queryInterface.bulkDelete(
+      options,
+      {
+        spotId: { [Op.in]: [1, 2, 3]}
+      }
+    )
+      }
 };

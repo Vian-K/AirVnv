@@ -7,9 +7,9 @@ if (process.env.NODE_ENV === "production") {
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     options.tableName = 'ReviewImages'
-    await queryInterface.bulkInsert(
+    return queryInterface.bulkInsert(
       options,
       [
         {
@@ -31,13 +31,13 @@ module.exports = {
     )
   },
 
-  async down (queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
 options.tableName = "ReviewImages"
 const Op = Sequelize.Op
-await queryInterface.bulkDelete(
+return queryInterface.bulkDelete(
   options,
   {
-    url: { [Op.in]: ["123" , "1234", "12345"]}
+    reviewId: { [Op.in]: [1, 2, 3]}
   }
 )
   }

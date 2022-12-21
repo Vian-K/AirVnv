@@ -6,9 +6,9 @@ if (process.env.NODE_ENV === "production") {
 }
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     options.tableName = 'Spots'
-    await queryInterface.bulkInsert(
+    return queryInterface.bulkInsert(
       options,
       [
         {
@@ -55,7 +55,7 @@ module.exports = {
 
   },
 
-  async down (queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     options.tableName = "Spots"
     const Op = Sequelize.Op;
     await queryInterface.bulkDelete(
