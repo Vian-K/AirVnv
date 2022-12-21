@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isAlpha: true,
-  
+
       }
     },
     lat: {
@@ -103,6 +103,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
 
     },
+    avgRating: {
+      type: DataTypes.DECIMAL,
+      allowNull: false
+    },
+    previewImage: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Spot',

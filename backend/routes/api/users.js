@@ -32,7 +32,44 @@ const { handleValidationErrors } = require('../../utils/validation');
       const { firstName, lastName, email, password, username } = req.body;
       const user = await User.signup({ firstName, lastName, email, username, password });
 
-      await setTokenCookie(res, user);
+    const isEmail = await User.findAll({
+      where: {
+        email
+      }
+    })
+
+    const isUsername = await User.findAll({
+      where: {
+        username
+      }
+    })
+    if(isEmail) {
+      const err = new Error('User already exists')
+      err.status = 403
+      err.errors = ['User with that email already exists']
+    }
+
+    if(isUsername) {
+      const err = new Error('User already exists')
+      err.status = 403
+      err.errors = ['User with that username already exists']
+    }
+
+    if(!req.body) {
+      const err = new Error('Validation Error')
+      err.status = 400
+      err.errors = [
+        {
+          "email": "Invalid email",
+          "username": "Username is required",
+          "firstName": "First Name is required",
+          "lastName": "Last name is required"
+        }
+      ]
+    }
+
+     await setTokenCookie(res, user);
+
 
       return res.json({
         user: user

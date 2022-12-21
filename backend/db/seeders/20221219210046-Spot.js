@@ -22,6 +22,8 @@ module.exports = {
           name: "tester1",
           description: "this is a tester",
           price: 123,
+          avgRating: 4.5,
+          previewImage: "image url"
 
 
         },
@@ -36,6 +38,8 @@ module.exports = {
           name: "tester2",
           description: "this is a tester",
           price: 123,
+          avgRating: 4.5,
+          previewImage: "image url"
 
         },
         {
@@ -49,6 +53,9 @@ module.exports = {
           name: "tester3",
           description: "this is a tester",
           price: 1234,
+          avgRating: 4.5,
+          previewImage: "image url"
+
 
         }
       ], {})
