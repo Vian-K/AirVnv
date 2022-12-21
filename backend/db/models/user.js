@@ -48,7 +48,8 @@ module.exports = (sequelize, DataTypes) => {
         models.Spot,
          { through: models.Booking,
           otherKey: 'spotId',
-          foreignKey: 'userId'
+          foreignKey: 'userId',
+          as: "Owner"
         })
         User.hasMany(
           models.Review,
@@ -59,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
           User.hasMany(
             models.Spot,
             {
+              // as: "Owner",
               foreignKey: 'ownerId', onDelete: 'CASCADE', hooks: true
             }
           )
