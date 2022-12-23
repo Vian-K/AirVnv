@@ -1,5 +1,5 @@
 const express = require('express')
-const { User, Spot, SpotImage, Review, sequelize } = require('../../db/models')
+const { User, Spot, SpotImage, Review, ReviewImage, sequelize } = require('../../db/models')
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 // const { Spot } = require('../../db/models');
 const router = express.Router();
@@ -51,6 +51,7 @@ const validateSpot = [
 ]
 
 
+
 router.get('/', async (req, res) => {
     const spots = await Spot.findAll({
         include: [
@@ -81,7 +82,7 @@ router.get('/', async (req, res) => {
                     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
                 ]
             },
-            group: ['Review.Id']
+            // group: ['Review.Id']
         })
 
         spot.avgRating = reviews[0].dataValues.avgRating
@@ -105,7 +106,40 @@ res.json({Spots: payload})
 
 })
 
+router.get('/:spotId/reviews', async (req,res, next)=> {
+    const { spotId } = req.params
 
+    const reviews = await Spot.findAll({
+        where: {
+            id: spotId
+        },
+        include: [{
+            model: Review,
+            include: [
+            {
+                model: User,
+                attributes: ["id", 'firstName', 'lastName'],
+                as: "User"
+            },
+            {
+                model: ReviewImage,
+                attributes: ["id", "url"]
+            }
+            ]
+        }]
+    })
+    const spot = await Spot.findByPk(spotId)
+    if(!spot) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Spot couldn't be found",
+            statusCode: 404
+        }]
+    }
+    res.json(reviews)
+})
 router.post("/", requireAuth, validateSpot, async (req,res,next) => {
     const id = req.user.id
     const { address, city, state, country, lat, lng, name, description, price } = req.body
@@ -168,7 +202,7 @@ router.get('/current', requireAuth, async(req, res, next) => {
                     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
                 ]
             },
-            group: ['Review.Id']
+            // group: ['Review.Id']
         })
 
         spot.avgRating = reviews[0].dataValues.avgRating
@@ -275,6 +309,72 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
         preview: spotimage.preview
     })
 })
+
+router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
+    const { spotId } = req.params
+    const userId = req.user.id
+    const { review, stars } = req.body
+    const spot = await Spot.findByPk(spotId)
+
+    const reviewCheck = await Review.findAll()
+        reviewCheck.forEach(review => {
+            if(review.dataValues.userId === userId){
+                const err = new Error('User already has a review for this spot')
+
+        err.title = 'User already has a review for this spot'
+        err.status = 403;
+        err.errors = [{
+            message: "User already has a review for this spot",
+            statusCode: 403
+        }]
+        return next(err)
+            }
+        })
+
+    if(!spot) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Spot couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
+    }
+
+
+    const reviews = await Review.create({
+        userId: userId,
+        spotId,
+        review,
+        stars
+    })
+    if(!review) {
+        const err = new Error('Validation Error')
+        err.title = "Validation error"
+        err.status = 400;
+        err.errors = [{
+            message: 'Review text is required',
+        }]
+        return next(err)
+    }
+        if(isNaN(stars) || stars < 1 || stars > 5) {
+            const err = new Error('Validation Error')
+            err.title = "Validation error"
+            err.status = 400;
+            err.errors = [{
+
+                message: 'Stars must be an integer from 1 to 5'
+            }]
+            return next(err)
+        }
+    res.json(reviews)
+
+
+})
+
+
+
 
 
 module.exports = router;
