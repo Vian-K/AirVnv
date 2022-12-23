@@ -16,23 +16,44 @@ module.exports = {
         {
 
           userId: 1,
-          spotId: 1,
-          review: "This was an awesome spot!",
+          spotId: 1, //house 1
+          review: "This is the first review!",
           stars: 5,
         },
         {
 
           userId: 2,
-          spotId: 2,
-          review: "This was an awesome spot!",
-          stars: 5,
+          spotId: 1, //house 1
+          review: "This is the second review!",
+          stars: 3,
         },
         {
 
-          userId: 3,
-          spotId: 3,
-          review: "This was an awesome spot!",
-          stars: 5,
+          userId: 1,
+          spotId: 2, //house 2
+          review: "This is the first review",
+          stars: 2,
+        },
+        {
+
+          userId: 2,
+          spotId: 2, //house 2
+          review: "This is the second review!",
+          stars: 3,
+        },
+        {
+
+          userId: 1,
+          spotId: 3, //house
+          review: "This was an first review!",
+          stars: 4,
+        },
+        {
+
+          userId: 2,
+          spotId: 3, //house 
+          review: "This was an second review!",
+          stars: 2,
         }
       ], {}
     )
@@ -44,7 +65,7 @@ module.exports = {
     return queryInterface.bulkDelete(
       options,
       {
-        userId: { [Op.in]: [1, 2, 3]}
+        spotId: { [Op.in]: [1, 2, 3]}
       }
     )
   }

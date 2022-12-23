@@ -26,21 +26,21 @@ module.exports = (sequelize, DataTypes) => {
     address: {
       type:DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isAlphanumeric: true,
-        checkAddress(value){
-          let wordsSplit = value.split(' ')
-        if(!isNaN(wordsSplit[0])) {
-          throw new Error('Invalid Address')
-        }
-      }
-      }
+      // validate: {
+      //   isAlphanumeric: true,
+      //   checkAddress(value){
+      //     let wordsSplit = value.split(' ')
+      //   if(!isNaN(wordsSplit[0])) {
+      //     throw new Error('Invalid Address')
+      //   }
+      // }
+      // }
     },
     city: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true,
+        // isAlpha: true,
 
       }
     },
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true,
+        // isAlpha: true,
 
       }
     },
@@ -56,31 +56,31 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true,
+        // isAlpha: true,
 
       }
     },
     lat: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-      validate: {
-        isFloat: true,
-      }
+      // validate: {
+      //   isFloat: true,
+      // }
     },
     lng:{
       type: DataTypes.DECIMAL,
       allowNull: false,
-      validate: {
-        isFloat: true,
-      }
+      // validate: {
+      //   isFloat: true,
+      // }
     },
     name: {
       type: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: {
-          isAlpha: true
-        }
+        // validate: {
+        //   isAlpha: true
+        // }
       },
     },
     description: {
@@ -91,9 +91,9 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-      validate: {
-        isNumeric: true
-      }
+      // validate: {
+      //   isNumeric: true
+      // }
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -103,7 +103,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
 
     },
- 
+
   }, {
     sequelize,
     modelName: 'Spot',
