@@ -81,8 +81,8 @@ router.get('/', async (req, res) => {
                     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
                 ]
             },
+            group: ['Review.id']
         })
-
         spot.avgRating = reviews[0].dataValues.avgRating
         spot.SpotImages.forEach(image => {
             if(image.preview === true) {
