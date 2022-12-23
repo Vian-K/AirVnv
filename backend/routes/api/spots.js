@@ -6,8 +6,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { INTEGER, DATE } = require('sequelize');
-const { re, sum } = require('mathjs');
-const { result, groupBy } = require('lodash');
+
 
 const validateSpot = [
     check('address')
@@ -82,6 +81,7 @@ router.get('/', async (req, res) => {
                     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
                 ]
             },
+            group: ['Review.Id']
         })
 
         spot.avgRating = reviews[0].dataValues.avgRating
@@ -168,10 +168,11 @@ router.get('/current', requireAuth, async(req, res, next) => {
                     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
                 ]
             },
+            group: ['Review.Id']
         })
 
         spot.avgRating = reviews[0].dataValues.avgRating
-        
+
         spot.SpotImages.forEach(image => {
             if(image.preview === true) {
                 spot.previewImage = image.url
