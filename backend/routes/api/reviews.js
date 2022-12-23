@@ -21,16 +21,16 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 
     console.log(reviewimage2.length)
     if(reviewimage2.length > 10) {
-        const err = new Error('Review does not exist')
-        err.title = 'Review couldn\'t be found'
-        err.status = 404;
+        const err = new Error('Maximum number of images for this resource was reached')
+        err.title = 'Maximum number of images for this resource was reached'
+        err.status = 403;
         err.errors = [{
-            message: "Review couldn't be found",
+            message: "Maximum number of images for this resource was reached",
             statusCode: 404
         }]
         return next(err)
     }
-    
+
     if(!review) {
         const err = new Error('Review does not exist')
         err.title = 'Review couldn\'t be found'
