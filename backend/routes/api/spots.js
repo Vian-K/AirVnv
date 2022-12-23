@@ -1,11 +1,12 @@
 const express = require('express')
-const { User, Spot, SpotImage, Review, ReviewImage, sequelize } = require('../../db/models')
+const { User, Spot, SpotImage, Review, ReviewImage, Booking, sequelize } = require('../../db/models')
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 // const { Spot } = require('../../db/models');
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { INTEGER, DATE } = require('sequelize');
+
 
 
 const validateSpot = [
@@ -49,7 +50,6 @@ const validateSpot = [
     handleValidationErrors
 
 ]
-
 
 
 router.get('/', async (req, res) => {
@@ -105,14 +105,89 @@ router.get('/', async (req, res) => {
 res.json({Spots: payload})
 
 })
+router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
+    const { spotId } = req.params
+    const userId = req.user.id
+    const { review, stars } = req.body
+    const spot = await Spot.findByPk(spotId)
+    if(!spot) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Spot couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
+    }
+    const reviewCheck = await Review.findAll()
+        reviewCheck.forEach(review => {
+            if(review.dataValues.userId === userId){
+                const err = new Error('User already has a review for this spot')
 
+        err.title = 'User already has a review for this spot'
+        err.status = 403;
+        err.errors = [{
+            message: "User already has a review for this spot",
+            statusCode: 403
+        }]
+        return next(err)
+            }
+        })
+    const reviews = await Review.create({
+        userId: userId,
+        spotId,
+        review,
+        stars
+    })
+    if(!review) {
+        const err = new Error('Validation Error')
+        err.title = "Validation error"
+        err.status = 400;
+        err.errors = [{
+            message: 'Review text is required',
+        }]
+        return next(err)
+    }
+        if(isNaN(stars) || stars < 1 || stars > 5) {
+            const err = new Error('Validation Error')
+            err.title = "Validation error"
+            err.status = 400;
+            err.errors = [{
+
+                message: 'Stars must be an integer from 1 to 5'
+            }]
+            return next(err)
+        }
+    res.json(reviews)
+
+
+})
+// ASK IF SPOT DATA IS REQUIRED TO BE REMOVED
 router.get('/:spotId/reviews', async (req,res, next)=> {
     const { spotId } = req.params
+    const user = req.user.id
 
+
+
+
+    const spot = await Spot.findByPk(spotId)
+    console.log(spot)
+    if(!spot) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Spot couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
+    }
     const reviews = await Spot.findAll({
         where: {
             id: spotId
         },
+
         include: [{
             model: Review,
             include: [
@@ -128,16 +203,7 @@ router.get('/:spotId/reviews', async (req,res, next)=> {
             ]
         }]
     })
-    const spot = await Spot.findByPk(spotId)
-    if(!spot) {
-        const err = new Error('Spot does not exist')
-        err.title = 'Spot couldn\'t be found'
-        err.status = 404;
-        err.errors = [{
-            message: "Spot couldn't be found",
-            statusCode: 404
-        }]
-    }
+
     res.json(reviews)
 })
 router.post("/", requireAuth, validateSpot, async (req,res,next) => {
@@ -230,27 +296,57 @@ res.json({Spots: payload})
 router.get('/:spotId', async(req,res, next) => {
 
     const spots = await Spot.findByPk(req.params.spotId, {
-        include: [
-        {
-            model: SpotImage,
-            attributes: ['id', 'url', 'preview']
-        },
-        {
-            model: User,
-            attributes: ["id", "firstName", "lastName"],
-            as: "Owner"
-        },
-
-        ]
+        raw: true,
+      
     })
+
+    const reviews = await Review.findAll({
+        where: {
+            spotId: spots.id
+        },
+            attributes: ["stars", "review"],
+            raw: true
+
+    })
+    let count = 0;
+    let total = reviews.length;
+    reviews.forEach(rating => {
+        count += rating.stars
+    })
+
+    spots.numReviews = reviews.length;
+    spots.avgStarRating = count / total
+
+    const image = await SpotImage.findAll({
+        where: {
+            preview: true,
+            spotId: spots.id,
+        },
+        attributes: ['id', 'url', 'preview']
+    })
+    spots.SpotImages = image;
+
+    const owner = await User.findOne({
+        where: {
+                id: spots.ownerId
+        },
+        attributes: ['id', 'firstName', 'lastName']
+    })
+    spots.Owner = owner
+
     if(!spots) {
-        res.status(404)
-        res.json({
-            message: "Couldn't find a Spot with the specified id"
-        })
-    } else {
-    res.json(spots)
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Spot couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
     }
+
+    res.json(spots)
+
 })
 
 router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
@@ -310,27 +406,19 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     })
 })
 
-router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
+router.post('/:spotId/bookings', requireAuth, async (req,res,next) => {
+    const user = req.user
+
+    const { userId } = req.user.id
     const { spotId } = req.params
-    const userId = req.user.id
-    const { review, stars } = req.body
+    const { startDate, endDate } = req.body
     const spot = await Spot.findByPk(spotId)
+    const bookings = await Booking.findByPk(spotId)
 
-    const reviewCheck = await Review.findAll()
-        reviewCheck.forEach(review => {
-            if(review.dataValues.userId === userId){
-                const err = new Error('User already has a review for this spot')
-
-        err.title = 'User already has a review for this spot'
-        err.status = 403;
-        err.errors = [{
-            message: "User already has a review for this spot",
-            statusCode: 403
-        }]
-        return next(err)
-            }
-        })
-
+    const newStartDate = new Date(startDate).toISOString().slice(0,10)
+    const newEndDate = new Date(endDate).toISOString().slice(0,10)
+console.log(newStartDate)
+    console.log(newEndDate)
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -342,36 +430,25 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
         return next(err)
     }
 
-
-    const reviews = await Review.create({
-        userId: userId,
-        spotId,
-        review,
-        stars
-    })
-    if(!review) {
+    if(newEndDate === newStartDate) {
         const err = new Error('Validation Error')
-        err.title = "Validation error"
+        err.title = 'endDate cannot be on or before startDate'
         err.status = 400;
-        err.errors = [{
-            message: 'Review text is required',
+        err.error =[{
+            endDate: "endDate cannot be on or before startDate"
         }]
-        return next(err)
     }
-        if(isNaN(stars) || stars < 1 || stars > 5) {
-            const err = new Error('Validation Error')
-            err.title = "Validation error"
-            err.status = 400;
-            err.errors = [{
+    const addbookings = await Booking.create({
+        spotId: spotId,
+        userId: user.id,
+        startDate: newStartDate,
+        endDate: newEndDate
+    })
 
-                message: 'Stars must be an integer from 1 to 5'
-            }]
-            return next(err)
-        }
-    res.json(reviews)
-
-
+res.json(addbookings)
 })
+
+
 
 
 

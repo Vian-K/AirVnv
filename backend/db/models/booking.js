@@ -29,20 +29,28 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     startDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false
     },
     endDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false
     },
     createdAt: {
       type: DataTypes.DATE,
+      get: function() {
+        return this.getDataValue('createdAt')
+        .toLocaleString('en-CA')
+      },
       allowNull: false,
 
     },
     updatedAt: {
       type: DataTypes.DATE,
+      get: function() {
+        return this.getDataValue('updatedAt')
+        .toLocaleString('en-CA')
+      },
       allowNull: false,
     },
 
