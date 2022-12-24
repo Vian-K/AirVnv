@@ -6,9 +6,6 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { INTEGER, DATE } = require('sequelize');
-
-
-
 const validateSpot = [
     check('address')
         .exists({checkFalsy: true})
@@ -166,13 +163,10 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
 // ASK IF SPOT DATA IS REQUIRED TO BE REMOVED
 router.get('/:spotId/reviews', async (req,res, next)=> {
     const { spotId } = req.params
-    const user = req.user.id
-
-
 
 
     const spot = await Spot.findByPk(spotId)
-    console.log(spot)
+
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -204,7 +198,9 @@ router.get('/:spotId/reviews', async (req,res, next)=> {
         }]
     })
 
-    res.json(reviews)
+    res.json({
+        reviews
+    })
 })
 router.post("/", requireAuth, validateSpot, async (req,res,next) => {
     const id = req.user.id
@@ -294,12 +290,9 @@ res.json({Spots: payload})
 })
 
 router.get('/:spotId', async(req,res, next) => {
-
     const spots = await Spot.findByPk(req.params.spotId, {
         raw: true,
-      
     })
-
     const reviews = await Review.findAll({
         where: {
             spotId: spots.id
@@ -406,6 +399,41 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     })
 })
 
+router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
+    const { spotId } = req.params
+    const userId = req.user.id
+
+
+    const spot = await Spot.findOne({
+        where: { id: spotId }
+    })
+
+
+    if (spot.ownerId === userId) {
+
+        const ownerBookings = await Booking.findAll({
+            include: [{model: User,
+                attributes: ["id", "firstName", "lastName"]
+            }],
+
+            where: {
+                spotId: spotId
+            },
+        })
+        return res.json({ownerBookings})
+    } else {
+       
+        const userBookings = await Booking.findAll({
+            where: {
+                spotId: spotId,
+                userId: userId
+            },
+            attributes: ['spotId', 'startDate', 'endDate']
+        })
+        return res.json({userBookings})
+    }
+})
+
 router.post('/:spotId/bookings', requireAuth, async (req,res,next) => {
     const user = req.user
 
@@ -447,8 +475,6 @@ console.log(newStartDate)
 
 res.json(addbookings)
 })
-
-
 
 
 

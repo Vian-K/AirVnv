@@ -9,8 +9,40 @@ const { INTEGER, DATE } = require('sequelize');
 
 router.get('/current', requireAuth, async (req, res, next) => {
     const user = req.user
-    const bookings = await Booking.findByPk(user.id)
-
+    const bookings = await Booking.findAll({
+        where: {
+            userId: user.id
+        },
+        include: [
+            {
+                model: Spot,
+                attributes: ["ownerId", "address", "city",
+                "state", "country", "lat", "lng", "name", "price"
+            ]
+            },
+        ]
+    })
+    const spots = await Spot.findAll({
+        include: [
+            {
+                model: SpotImage
+            }
+        ],
+    })
+    let payload = []
+    spots.forEach(spot => {
+        payload.push(spot.toJSON())
+    })
+    for(let i = 0; i < payload.length; i++) {
+        let spot = payload[i]
+        spot.SpotImages.forEach(image => {
+            if(image.preview === true) {
+                bookings.forEach(booking => {
+                    booking.Spot.dataValues.previewImage = image.url
+                })
+            }
+        })
+    }
     res.json(bookings)
 })
 
@@ -46,5 +78,8 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
     bookings.endDate = endDate
     res.json(bookings)
 })
+
+
+
 
 module.exports = router;
