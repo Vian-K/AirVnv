@@ -146,13 +146,14 @@ router.get('/', validateQueryError, async (req, res) => {
     const spots = await Spot.findAll({
         include: [
             {
-                model: Review
+                model: Review,
+                as: 'reviews'
             },
             {
                 model: SpotImage
             }
         ],
-        group: ["Reviews.id"],
+        group: ["Spot.id", "Reviews.id", "SpotImages.id"],
         where: optionalParams.where,
         limit: pagination.limit,
         offset: pagination.offset
