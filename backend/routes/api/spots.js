@@ -472,11 +472,26 @@ router.get('/:spotId', async(req,res, next) => {
 router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     const id = req.user.id
     const { address, city, state, country, lat, lng, name, description, price } = req.body
+    const spot = await Spot.findByPk(req.params.spotId)
+
     const spots = await Spot.findOne({
         where: {
             ownerId: id
         }
     })
+    if(id !== spot.ownerId) {
+        const err = new Error('Authorization required')
+        err.title = 'Authorization required'
+        err.status = 403;
+        return next(err)
+    }
+    if(!spot) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        return next(err)
+
+    }
     spots.address = address
     spots.city = city
     spots.state = state
@@ -489,13 +504,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
 
     await spots.save()
 
-    if(!spots) {
-        const err = new Error('Spot does not exist')
-        err.title = 'Spot couldn\'t be found'
-        err.status = 404;
-        return next(err)
 
-    }
     return res.json(spots)
 })
 
