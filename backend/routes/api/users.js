@@ -25,73 +25,37 @@ const { handleValidationErrors } = require('../../utils/validation');
       .withMessage('Password must be 6 characters or more.'),
     handleValidationErrors
   ];
-  router.post(
-    '/',
-    validateSignup,
-    async (req, res) => {
-      const { firstName, lastName, email, password, username } = req.body;
-      const user = await User.signup({ firstName, lastName, email, username, password });
-
-    const isEmail = await User.findAll({
+  router.post('/', validateSignup, async (req, res, next) => {
+    const { firstName, lastName, email, password, username } = req.body;
+    const isEmail = await User.findOne({
       where: {
         email
       }
     })
+    if (isEmail) {
+      const err = new Error('User already exists')
+      err.status = 403
+      err.errors = ["User with that email already exists"]
+      next(err)
+    }
 
-    const isUsername = await User.findAll({
-      where: {
-        username
-      }
+    const isUsername = await User.findOne({
+      where: {username}
     })
-    if(isEmail) {
+    if (isUsername) {
       const err = new Error('User already exists')
       err.status = 403
-      err.errors = ['User with that email already exists']
+      err.errors = ["User with that username already exists"]
+      next(err)
     }
+    const user = await User.signup({ firstName, lastName, email, username, password });
 
-    if(isUsername) {
-      const err = new Error('User already exists')
-      err.status = 403
-      err.errors = ['User with that username already exists']
-    }
+    await setTokenCookie(res, user);
 
-    if(!req.body) {
-      const err = new Error('Validation Error')
-      err.status = 400
-      err.errors = [
-        {
-          "email": "Invalid email",
-          "username": "Username is required",
-          "firstName": "First Name is required",
-          "lastName": "Last name is required"
-        }
-      ]
-    }
-
-     await setTokenCookie(res, user);
-
-
-      return res.json({
+    return res.json({
         user: user
       });
     }
-  );
+);
 
-// HSjmL1xt-jVtUUq8CJZE7XJ12r4tkpA84YeA
 module.exports = router;
-
-
-// fetch('/api/users', {
-//     method: 'POST',
-//     headers: {
-//       "Content-Type": "application/json",
-//       "XSRF-TOKEN": `9TrXH82P-VQRHRfHcDniHyG0zw1jqaDrBmBQ`
-//     },
-//     body: JSON.stringify({
-//         firstName: 'vian',
-//         lastName: 'Khach',
-//       email: 'tester123@google.com',
-//       username: 'viankhach',
-//       password: 'asdasds'
-//     })
-//   }).then(res => res.json()).then(data => console.log(data));
