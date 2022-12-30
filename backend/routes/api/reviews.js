@@ -3,15 +3,17 @@ const { User, Spot, SpotImage, Review, ReviewImage, sequelize } = require('../..
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
 const router = express.Router();
 const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation');
-const { INTEGER, DATE } = require('sequelize');
+
 
 
 router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
     // const user = req.user
     const { reviewId } = req.params
     const { url } = req.body
-
+    const reviewimage = await ReviewImage.create({
+        reviewId: reviewId,
+        url
+    })
     const review = await Review.findByPk(reviewId)
     const reviewimage2 = await ReviewImage.findAll({
         where: {
@@ -19,7 +21,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         }
     })
 
-    console.log(reviewimage2.length)
+
     if(reviewimage2.length > 10) {
         const err = new Error('Maximum number of images for this resource was reached')
         err.title = 'Maximum number of images for this resource was reached'
@@ -41,12 +43,6 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         }]
         return next(err)
     }
-
-
-    const reviewimage = await ReviewImage.create({
-        reviewId: reviewId,
-        url
-    })
 
 res.json({
     id: reviewimage.id,

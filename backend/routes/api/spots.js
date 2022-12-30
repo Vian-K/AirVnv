@@ -4,7 +4,8 @@ const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth')
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
+const { Op } = require('sequelize');
+const e = require('express');
 
 const validateSpot = [
 
@@ -146,14 +147,14 @@ router.get('/', validateQueryError, async (req, res) => {
     const spots = await Spot.findAll({
         include: [
             {
-                model: Review,
-                
+                model: Review
+
             },
             {
                 model: SpotImage
             }
         ],
-        group: ["Spot.id", "Reviews.id", "SpotImages.id"],
+        // group: ["Spot.id", "Reviews.id", "SpotImages.id"],
         where: optionalParams.where,
         limit: pagination.limit,
         offset: pagination.offset
@@ -172,24 +173,33 @@ router.get('/', validateQueryError, async (req, res) => {
                 spotId: spot.id
             },
             attributes: {
-                include: [
-                    [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
-                ]
+                // include: [
+                //     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
+                // ]
+                attributes: ["stars"],
+                raw: true
             },
             // group: ['Review.Id']
         })
-        spot.avgRating = reviews[0].dataValues.avgRating
+        // spot.avgRating = reviews[0].dataValues.avgRating
         spot.SpotImages.forEach(image => {
             if(image.preview === true) {
                 spot.previewImage = image.url
             }
         })
 
+        let countRating = 0;
+        spot.Reviews.forEach(count => {
+            countRating += count.stars
+        })
+        let average = countRating / reviews.length
         if(!spots.previewImage) {
             spots.previewImage = 'no image found'
         }
         if(!spot.avgRating) {
             spot.avgRating = 'No reviews'
+        } else {
+            spot.avgRating = average
         }
         delete spot.SpotImages
         delete spot.Reviews
@@ -213,10 +223,13 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
         }]
         return next(err)
     }
+    let id;
     const reviewCheck = await Review.findAll()
         reviewCheck.forEach(review => {
-            if(review.dataValues.userId === userId){
-                const err = new Error('User already has a review for this spot')
+           id = review.dataValues.userId
+        })
+        if(id === userId) {
+        const err = new Error('User already has a review for this spot')
 
         err.title = 'User already has a review for this spot'
         err.status = 403;
@@ -226,7 +239,6 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
         }]
         return next(err)
             }
-        })
     const reviews = await Review.create({
         userId: userId,
         spotId,
