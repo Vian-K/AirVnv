@@ -4,9 +4,7 @@ const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth')
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-
 const { Op } = require('sequelize');
-const e = require('express');
 const validateSpot = [
 
     check('address')
@@ -104,7 +102,7 @@ const validateQueryError = [
 
 ]
 router.get('/', validateQueryError, async (req, res) => {
-    
+
     let { page, size, maxLat, minLat, minLng, maxLng, maxPrice, minPrice } = req.query
     if(!page) page = 1;
     if (!size) size = 20
@@ -117,8 +115,6 @@ router.get('/', validateQueryError, async (req, res) => {
     maxLng = parseInt(maxLng)
     minPrice = parseInt(minPrice)
     maxPrice = parseInt(maxPrice)
-
-    console.log(minPrice)
 
     const pagination = {}
     if(page >= 1 && size >= 1) {

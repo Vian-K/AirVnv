@@ -77,30 +77,20 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
         statusCode: 200
     })
 })
-// COME BACK FOR user being able to edit other users booking
+
 router.put('/:bookingId', requireAuth, async (req, res, next) => {
     const { bookingId } = req.params
-    const id = req.user.id
+    const userId = req.user.id
     const { startDate, endDate} = req.body
 
     const newStartDate = new Date(startDate).toISOString().slice(0,10)
     const newEndDate = new Date(endDate).toISOString().slice(0,10)
-
-    const allBooking = await Booking.findAll()
-    let spotId = null
-    let userID = null
-    allBooking.forEach(booking => {
-       spotId = booking.dataValues.spotId
-       userID = booking.dataValues.userId
-
-    })
-
     const bookings = await Booking.findOne({
         where: {
-            userId: id
+            id: bookingId
         }
     })
-    
+
     if(!bookings) {
         const err = new Error('Booking does not exist')
         err.title = 'Booking couldn\'t be found'
@@ -111,6 +101,18 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         }]
         return next(err)
     }
+
+    if(bookings.userId !== userId) {
+        const err = new Error('Validation Error')
+        err.title = 'You are not authorized to edit this booking'
+        err.status = 403;
+        err.error =[{
+            message: "You are not authorized to edit this booking",
+            statusCode: 403
+        }]
+        return next(err)
+    }
+
     if(newEndDate <= newStartDate) {
         const err = new Error('Validation Error')
         err.title = 'endDate cannot be on or before startDate'
@@ -120,10 +122,13 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         }]
         return next(err)
     }
-if(id !== userID) {
+
     const conflictingBookings = await Booking.findAll({
         where: {
-            spotId: spotId,
+            spotId: bookings.spotId,
+            userId: {
+                [Op.ne]: userId
+            },
             [Op.or]: [
               {
                 startDate: {
@@ -173,19 +178,22 @@ if(conflict === true) {
         }
         return next(err)
     }
-}
+    
+    if(bookings.dataValues.endDate <= endDate) {
+        const err = new Error('Past bookings can\'t be modified')
+            err.title = 'Past bookings can\'t be modified'
+            err.status = 403
+            err.error = [{
+                message: "Past bookings can\'t be modified",
+                statusCode: 403
+            }]
+            return next(err)
+    }
 
-console.log(id)
-console.log(userID)
-if(id !== userID) {
-    throw new Error("This booking is not available to edit by you")
-
-} else {
     bookings.startDate = startDate
     bookings.endDate = endDate
-}
 
-await bookings.save()
+    await bookings.save()
     res.json(bookings)
 })
 
