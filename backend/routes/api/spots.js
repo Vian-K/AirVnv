@@ -4,9 +4,11 @@ const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth')
 const router = express.Router();
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { INTEGER, DATE } = require('sequelize');
 
+const { Op } = require('sequelize');
+const e = require('express');
 const validateSpot = [
+
     check('address')
         .exists({checkFalsy: true})
         .notEmpty()
@@ -48,8 +50,102 @@ const validateSpot = [
 
 ]
 
+const validateQueryError = [
+    check('page')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isInt({min: 1})
+    .withMessage("Page must be greater than or equal to 1"),
+    check('size')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isInt({min: 1})
+    .withMessage("Size must be greater than or equal to 1"),
+    check('maxLat')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isDecimal({checkFalsy: true})
+    .withMessage("Maximum latitude is invalid"),
+    check('minLat')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isDecimal({checkFalsy: true})
+    .withMessage("Minumum latitude is invalid"),
+    check('minLng')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isDecimal({checkFalsy: true})
+    .withMessage("Maximum longitude is invalid"),
+    check('maxLng')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isDecimal({checkFalsy: true})
+    .optional()
+    .withMessage("Minimum longitude is invalid"),
+    check('minPrice')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isInt({min: 0})
+    .withMessage("Maximum price must be greater than or equal to 0"),
+    check('maxPrice')
+    .exists({checkFalsy: true})
+    .optional()
+    .notEmpty()
+    .isInt({min: 0})
+    .withMessage("Minimum price must be greater than or equal to 0"),
+    handleValidationErrors
 
-router.get('/', async (req, res) => {
+]
+router.get('/', validateQueryError, async (req, res) => {
+    
+    let { page, size, maxLat, minLat, minLng, maxLng, maxPrice, minPrice } = req.query
+    if(!page) page = 1;
+    if (!size) size = 20
+
+    size = parseInt(size)
+    page = parseInt(page)
+    maxLat = parseInt(maxLat)
+    minLat = parseInt(minLat)
+    minLng = parseInt(minLng)
+    maxLng = parseInt(maxLng)
+    minPrice = parseInt(minPrice)
+    maxPrice = parseInt(maxPrice)
+
+    console.log(minPrice)
+
+    const pagination = {}
+    if(page >= 1 && size >= 1) {
+        pagination.limit = size
+        pagination.offset = size * (page - 1)
+    }
+    let optionalParams = {
+        where: {}
+    }
+    let pricefilter = {}
+    if (minPrice) {
+        pricefilter = {
+            ...pricefilter,
+            [Op.gte]: minPrice
+        }
+    }
+    if(maxPrice) {
+        pricefilter = {
+            ...pricefilter,
+            [Op.lte]: maxPrice
+        }
+
+    }
+    if(Object.keys(pricefilter).length > 0) {
+        optionalParams.where.price = pricefilter
+    }
+    console.log(pricefilter)
     const spots = await Spot.findAll({
         include: [
             {
@@ -59,7 +155,9 @@ router.get('/', async (req, res) => {
                 model: SpotImage
             }
         ],
-
+        where: optionalParams.where,
+        limit: pagination.limit,
+        offset: pagination.offset
     })
     let payload = []
 
@@ -99,7 +197,7 @@ router.get('/', async (req, res) => {
         delete spot.Reviews
     }
 
-res.json({Spots: payload})
+res.json({Spots: payload, page, size})
 
 })
 router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
@@ -301,6 +399,7 @@ router.get('/:spotId', async(req,res, next) => {
             raw: true
 
     })
+
     let count = 0;
     let total = reviews.length;
     reviews.forEach(rating => {
@@ -309,6 +408,7 @@ router.get('/:spotId', async(req,res, next) => {
 
     spots.numReviews = reviews.length;
     spots.avgStarRating = count / total
+
 
     const image = await SpotImage.findAll({
         where: {
@@ -337,7 +437,12 @@ router.get('/:spotId', async(req,res, next) => {
         }]
         return next(err)
     }
-
+    if(!spots.avgStarRating) {
+        spots.avgStarRating = "No reviews yet"
+    }
+    if(!spots.numReviews) {
+        spots.numReviews = "No reviews yet"
+    }
     res.json(spots)
 
 })
@@ -401,6 +506,7 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
 
 router.post('/:spotId/bookings', requireAuth, async (req,res,next) => {
     const user = req.user
+    const bookingId = req.booking
     const { spotId } = req.params
     const { startDate, endDate } = req.body
     const spot = await Spot.findByPk(spotId)
@@ -432,16 +538,43 @@ router.post('/:spotId/bookings', requireAuth, async (req,res,next) => {
     const conflictingBookings = await Booking.findAll({
         where: {
             spotId: spotId,
-            startDate,
-            endDate
+            [Op.or]: [
+              {
+                startDate: {
+                  [Op.lt]: newEndDate,
+                },
+                endDate: {
+                  [Op.gt]: newStartDate,
+                },
+              },
+              {
+                startDate: {
+                  [Op.gt]: newStartDate,
+                },
+                endDate: {
+                  [Op.lt]: newEndDate,
+                },
+              },
+              {
+                startDate: {
+                  [Op.lt]: newStartDate,
+                },
+                endDate: {
+                  [Op.gt]: newEndDate,
+                },
+            },
+            ],
         }
     });
 
     let conflict = false;
     conflictingBookings.forEach(cbooking => {
-        if (cbooking.dataValues.startDate < cbooking.dataValues.endDate ) {
-            conflict = true;
+        if ((newStartDate >= cbooking.startDate && newStartDate < cbooking.endDate) ||
+        (newEndDate > cbooking.startDate && newEndDate <= cbooking.endDate) ||
+        (newStartDate <= cbooking.startDate && newEndDate >= cbooking.endDate)) {
+            conflict = true
         }
+
     })
 
 if(conflict === true) {
@@ -456,6 +589,7 @@ if(conflict === true) {
     }
 
     const addbookings = await Booking.create({
+        id: bookingId,
         spotId: spotId,
         userId: user.id,
         startDate: newStartDate,
@@ -469,6 +603,18 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
     const { spotId } = req.params
     const userId = req.user.id
 
+    const bks = await Booking.findAll()
+
+    if(!bks) {
+        const err = new Error('Booking does not exist')
+        err.title = 'Booking couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Booking couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
+    }
     const spot = await Spot.findOne({
         where: { id: spotId }
     })
@@ -482,33 +628,31 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
         }]
         return next(err)
     }
-    if (spot.ownerId === userId) {
 
-        const ownerBookings = await Booking.findAll({
-            include: [{model: User,
-                attributes: ["id", "firstName", "lastName"]
-            }],
+    let bookings
+    if(spot.ownerId === userId) {
+       bookings = await Booking.findAll({
+           exclude: ["createdAt", "updatedAt"],
 
-            where: {
-                spotId: spotId
-            },
+            include: {
+                model: User,
+            attributes: ["id", "firstName", "lastName"]
+        },
+
         })
-        return res.json({ownerBookings})
-    } else {
+    }
+    if(spot.ownerId !== userId) {
+        bookings = await Booking.findAll({
 
-        const userBookings = await Booking.findAll({
-            where: {
-                spotId: spotId,
-                userId: userId
-            },
             attributes: ['spotId', 'startDate', 'endDate']
         })
-        return res.json({userBookings})
     }
-})
 
 
-
+    return res.json({
+        bookings
+    })
+    })
 
 
 
