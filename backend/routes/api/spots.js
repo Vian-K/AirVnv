@@ -147,7 +147,7 @@ router.get('/', validateQueryError, async (req, res) => {
         include: [
             {
                 model: Review,
-                as: 'Reviews'
+                
             },
             {
                 model: SpotImage
