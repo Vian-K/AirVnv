@@ -352,7 +352,7 @@ router.get('/current', requireAuth, async(req, res, next) => {
                 model: SpotImage
             }
         ],
-
+        group: ["Spot.id", "Reviews.id", "SpotImages.id"]
     })
     let payload = []
 
@@ -368,26 +368,33 @@ router.get('/current', requireAuth, async(req, res, next) => {
                 spotId: spot.id
             },
             attributes: {
-                include: [
-                    [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
-                ]
+                // include: [
+                //     [sequelize.fn("AVG", sequelize.col('stars')),"avgRating"]
+                // ]
+                attributes: ["stars"],
+                raw: true
             },
-            // group: ['Review.Id']
-        })
 
-        spot.avgRating = reviews[0].dataValues.avgRating
+        })
 
         spot.SpotImages.forEach(image => {
             if(image.preview === true) {
                 spot.previewImage = image.url
             }
         })
-
         if(!spots.previewImage) {
             spots.previewImage = 'no image found'
         }
+
+        let countRating = 0;
+        spot.Reviews.forEach(count => {
+            countRating += count.stars
+        })
+        let average = countRating / reviews.length
         if(!spot.avgRating) {
             spot.avgRating = 'No reviews'
+        } else {
+            spot.avgRating = average
         }
         delete spot.SpotImages
         delete spot.Reviews
