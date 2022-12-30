@@ -152,6 +152,7 @@ router.get('/', validateQueryError, async (req, res) => {
                 model: SpotImage
             }
         ],
+        group: ["Reviews.id"],
         where: optionalParams.where,
         limit: pagination.limit,
         offset: pagination.offset
