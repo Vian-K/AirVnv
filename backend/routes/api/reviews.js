@@ -63,7 +63,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 model: SpotImage
             }
         ],
-        group: ["Spot.Id", "Reviews.id", "SpotImages.id"]
+        group: ["Spot.id", "Reviews.id", "SpotImages.id"]
 
     })
     let payload = []

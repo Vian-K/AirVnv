@@ -317,7 +317,10 @@ router.post("/", requireAuth, validateSpot, async (req,res,next) => {
        ownerId: id,
        address, city, state, country, lat, lng, name, description, price})
 
-    res.json(spots)
+        if(spots){
+        res.statusCode(201)
+        res.json(spots)
+    }
 })
 
 router.delete('/:spotId', requireAuth, async(req,res,next) => {
