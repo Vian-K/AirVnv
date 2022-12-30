@@ -264,8 +264,10 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
             }]
             return next(err)
         }
+        if(reviews) {
     res.json(reviews)
-
+    res.status(201)
+        }
 
 })
 // ASK IF SPOT DATA IS REQUIRED TO BE REMOVED
@@ -318,7 +320,7 @@ router.post("/", requireAuth, validateSpot, async (req,res,next) => {
        address, city, state, country, lat, lng, name, description, price})
 
         if(spots){
-        res.statusCode(201)
+        res.status(201)
         res.json(spots)
     }
 })

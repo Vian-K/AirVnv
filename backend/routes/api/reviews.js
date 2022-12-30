@@ -43,11 +43,11 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
         }]
         return next(err)
     }
-
-res.json({
-    id: reviewimage.id,
-    url: reviewimage.url
-})
+    res.json({
+        id: reviewimage.id,
+        url: reviewimage.url
+    })
+   
 
 })
 // BODY MISSING REVIEWIMAGE SHOWING EMPTY ARRAY []
