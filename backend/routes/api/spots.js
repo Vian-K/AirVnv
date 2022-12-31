@@ -573,7 +573,7 @@ router.post('/:spotId/bookings', requireAuth, async (req,res,next) => {
         }]
         return next(err)
     }
-    if(req.user.id !== spot.ownerId) {
+    if(req.user.id === spot.ownerId) {
         const err = new Error('Cannot create booking for spot owned by yourself')
         err.title = 'Spot must not belong to the current user'
         err.status = 403;

@@ -112,6 +112,7 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
     const newStartDate = new Date(startDate).toISOString().slice(0,10)
     const newEndDate = new Date(endDate).toISOString().slice(0,10)
+    
     const bookings = await Booking.findOne({
         where: {
             id: bookingId
@@ -192,7 +193,6 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
         (newStartDate <= cbooking.startDate && newEndDate >= cbooking.endDate)) {
             conflict = true
         }
-
     })
 
 if(conflict === true) {
