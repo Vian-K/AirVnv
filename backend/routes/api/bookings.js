@@ -60,7 +60,12 @@ router.delete('/:bookingId', requireAuth, async (req, res, next) => {
         }]
         return next(err)
     }
-
+    if(req.user.id !== bookings.userId) {
+        const err = new Error('Authorization required')
+        err.title = 'Authorization required'
+        err.status = 403;
+        return next(err)
+    }
     if(bookings.dataValues.startDate <= startDate) {
         const err = new Error('Bookings that have been started can\'t be deleted')
             err.title = 'Bookings that have been started can\'t be deleted'
@@ -178,7 +183,7 @@ if(conflict === true) {
         }
         return next(err)
     }
-    
+
     if(bookings.dataValues.endDate <= endDate) {
         const err = new Error('Past bookings can\'t be modified')
             err.title = 'Past bookings can\'t be modified'

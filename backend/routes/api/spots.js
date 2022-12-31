@@ -328,6 +328,13 @@ router.post("/", requireAuth, validateSpot, async (req,res,next) => {
 router.delete('/:spotId', requireAuth, async(req,res,next) => {
     const id = req.params.spotId
     const spots = await Spot.findByPk(id)
+
+    if(req.user.id !== spots.ownerId) {
+        const err = new Error('Authorization required')
+        err.title = 'Authorization required'
+        err.status = 403;
+        return next(err)
+    }
     if(!spots) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -413,6 +420,16 @@ router.get('/:spotId', async(req,res, next) => {
     const spots = await Spot.findByPk(req.params.spotId, {
         raw: true,
     })
+    if(!spots) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        err.errors = [{
+            message: "Spot couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
+    }
     const reviews = await Review.findAll({
         where: {
             spotId: spots.id
@@ -449,16 +466,7 @@ router.get('/:spotId', async(req,res, next) => {
     })
     spots.Owner = owner
 
-    if(!spots) {
-        const err = new Error('Spot does not exist')
-        err.title = 'Spot couldn\'t be found'
-        err.status = 404;
-        err.errors = [{
-            message: "Spot couldn't be found",
-            statusCode: 404
-        }]
-        return next(err)
-    }
+
     if(!spots.avgStarRating) {
         spots.avgStarRating = "No reviews yet"
     }
@@ -472,9 +480,15 @@ router.get('/:spotId', async(req,res, next) => {
 router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     const id = req.user.id
     const { address, city, state, country, lat, lng, name, description, price } = req.body
-    const spot = await Spot.findByPk(req.params.spotId)
+    const spots = await Spot.findByPk(req.params.spotId)
+    if(!spots) {
+        const err = new Error('Spot does not exist')
+        err.title = 'Spot couldn\'t be found'
+        err.status = 404;
+        return next(err)
 
-    const spots = await Spot.findOne({
+    }
+    const spot = await Spot.findOne({
         where: {
             ownerId: id
         }
@@ -485,13 +499,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         err.status = 403;
         return next(err)
     }
-    if(!spot) {
-        const err = new Error('Spot does not exist')
-        err.title = 'Spot couldn\'t be found'
-        err.status = 404;
-        return next(err)
 
-    }
     spots.address = address
     spots.city = city
     spots.state = state
@@ -499,7 +507,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     spots.lat = lat
     spots.lng = lng
     spots.name = name
-    spots.description =description
+    spots.description = description
     spots.price = price
 
     await spots.save()
@@ -513,6 +521,16 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     const { url, preview } = req.body
     const spot = await Spot.findByPk(spotId)
 
+    if(req.user.id !== spot.ownerId) {
+        const err = new Error('Requires proper authorization')
+        err.title = 'Requires proper authorization'
+        err.status = 403;
+        err.errors = [{
+            message: "Requires proper authorization",
+            statusCode: 404
+        }]
+        return next(err)
+    }
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -544,6 +562,13 @@ router.post('/:spotId/bookings', requireAuth, async (req,res,next) => {
 
     const newStartDate = new Date(startDate).toISOString().slice(0,10)
     const newEndDate = new Date(endDate).toISOString().slice(0,10)
+
+    if(req.user.id !== spot.ownerId) {
+        const err = new Error('Cannot create booking for spot owned by yourself')
+        err.title = 'Spot must not belong to the current user'
+        err.status = 403;
+        return next(err)
+    }
 
     if(!spot) {
         const err = new Error('Spot does not exist')

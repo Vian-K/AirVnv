@@ -10,8 +10,8 @@ const { INTEGER, DATE } = require('sequelize');
 router.delete('/:imageId', requireAuth, async(req, res, next) => {
     const { imageId } = req.params
     const images = await ReviewImage.findByPk(imageId)
-    console.log(images)
 
+    const spots = await Spot.findAll()
    if(!images) {
     const err = new Error('Image does not exist')
     err.title = 'Image couldn\'t be found'
@@ -22,6 +22,17 @@ router.delete('/:imageId', requireAuth, async(req, res, next) => {
     }]
     return next(err)
    }
+   let ownerId;
+   spots.forEach(spot => {
+    ownerId = spot.ownerId
+   })
+ 
+   if(req.user.id !== ownerId) {
+    const err = new Error('Authorization required')
+    err.title = 'Authorization required'
+    err.status = 403;
+    return next(err)
+}
    await images.destroy()
    res.json(({
         message: "Successfully deleted",
