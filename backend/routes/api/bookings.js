@@ -22,6 +22,17 @@ router.get('/current', requireAuth, async (req, res, next) => {
             },
         ]
     })
+
+    if (Array.isArray(bookings) && bookings.length === 0) {
+        const err = new Error('You currently do not have any bookings')
+        err.title = 'Booking does not exist'
+        err.status = 404
+        err.error = [{
+            message: "You currently do not have any bookings",
+            statusCode: 404
+        }]
+        return next(err)
+    }
     const spots = await Spot.findAll({
         include: [
             {
@@ -29,6 +40,17 @@ router.get('/current', requireAuth, async (req, res, next) => {
             }
         ],
     })
+    if(!spots) {
+        const err = new Error('Spots does not exist')
+        err.title = 'Spots couldn\'t be found'
+        err.status = 404
+        err.error = [{
+            message: "Spots couldn't be found",
+            statusCode: 404
+        }]
+        console.log(err)
+        return next(err)
+    }
     let payload = []
     spots.forEach(spot => {
         payload.push(spot.toJSON())
@@ -43,7 +65,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             }
         })
     }
-    res.json(bookings)
+    res.json({bookings})
 })
 
 router.delete('/:bookingId', requireAuth, async (req, res, next) => {
