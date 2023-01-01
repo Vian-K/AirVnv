@@ -112,7 +112,8 @@ router.put('/:bookingId', requireAuth, async (req, res, next) => {
 
     const newStartDate = new Date(startDate).toISOString().slice(0,10)
     const newEndDate = new Date(endDate).toISOString().slice(0,10)
-    
+    const currentDate = new Date().toISOString().slice(0,10)
+
     const bookings = await Booking.findOne({
         where: {
             id: bookingId
@@ -205,8 +206,8 @@ if(conflict === true) {
         }
         return next(err)
     }
-
-    if(bookings.dataValues.endDate <= endDate) {
+    
+    if(currentDate >= bookings.startDate) {
         const err = new Error('Past bookings can\'t be modified')
             err.title = 'Past bookings can\'t be modified'
             err.status = 403

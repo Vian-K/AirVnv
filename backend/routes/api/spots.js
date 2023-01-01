@@ -271,9 +271,9 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
 
 })
 // ASK IF SPOT DATA IS REQUIRED TO BE REMOVED
+
 router.get('/:spotId/reviews', async (req,res, next)=> {
     const { spotId } = req.params
-
 
     const spot = await Spot.findByPk(spotId)
 
@@ -303,13 +303,17 @@ router.get('/:spotId/reviews', async (req,res, next)=> {
             {
                 model: ReviewImage,
                 attributes: ["id", "url"]
-            }
+            },
+
             ]
         }]
     })
-
+    let reviewswithout;
+    reviews.forEach(review => {
+        reviewswithout = review.Reviews
+    })
     res.json({
-        reviews
+        Reviews: reviewswithout
     })
 })
 router.post("/", requireAuth, validateSpot, async (req,res,next) => {
@@ -488,12 +492,16 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         return next(err)
 
     }
-    const spot = await Spot.findOne({
-        where: {
-            ownerId: id
-        }
+    const spot = await Spot.findAll()
+    console.log(id)
+
+    let ownerId;
+    spot.forEach(sp => {
+        ownerId = sp.ownerId
+
     })
-    if(id !== spot.ownerId) {
+    console.log(ownerId)
+    if(id !== ownerId) {
         const err = new Error('Authorization required')
         err.title = 'Authorization required'
         err.status = 403;

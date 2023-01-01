@@ -133,20 +133,18 @@ router.put('/:reviewId', requireAuth,  async (req,res, next) => {
     const { reviewId } = req.params
     const { review, stars } = req.body
     const reviews = await Review.findByPk(reviewId)
-
-    if(req.user.id !== reviews.userId) {
-        const err = new Error('Authorization required')
-        err.title = 'Authorization required'
-        err.status = 403;
-        return next(err)
-    }
-
+    console.log(reviews)
     if(!reviews) {
         const err = new Error('Review does not exist')
         err.title = 'Review couldn\'t be found'
         err.status = 404;
         return next(err)
-
+    }
+    if(req.user.id !== reviews.userId) {
+        const err = new Error('Authorization required')
+        err.title = 'Authorization required'
+        err.status = 403;
+        return next(err)
     }
     if(!review) {
         const err = new Error('Validation Error')
