@@ -333,12 +333,6 @@ router.delete('/:spotId', requireAuth, async(req,res,next) => {
     const id = req.params.spotId
     const spots = await Spot.findByPk(id)
 
-    if(req.user.id !== spots.ownerId) {
-        const err = new Error('Authorization required')
-        err.title = 'Authorization required'
-        err.status = 403;
-        return next(err)
-    }
     if(!spots) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -346,6 +340,13 @@ router.delete('/:spotId', requireAuth, async(req,res,next) => {
         return next(err)
 
     }
+    if(req.user.id !== spots.ownerId) {
+        const err = new Error('Authorization required')
+        err.title = 'Authorization required'
+        err.status = 403;
+        return next(err)
+    }
+
     await spots.destroy()
 
     res.json({
