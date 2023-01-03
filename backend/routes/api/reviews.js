@@ -90,7 +90,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     }
 
 }
-    const reviews = await Review.findOne({
+    const reviews = await Review.findAll({
         where: {
             userId: user.id
         },

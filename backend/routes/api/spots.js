@@ -504,7 +504,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         return next(err)
 
     }
-   
+
     if(req.user.id !== spots.ownerId) {
         const err = new Error('Authorization required')
         err.title = 'Authorization required'
@@ -739,7 +739,7 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
     }
 
     return res.json({
-        bookings
+        Bookings:bookings
     })
     })
 
