@@ -308,6 +308,17 @@ router.get('/:spotId/reviews', async (req,res, next)=> {
             ]
         }]
     })
+
+    if (Array.isArray(reviews) && reviews.length === 0) {
+        const err = new Error('You currently do not have any reviews')
+        err.title = 'Review does not exist'
+        err.status = 404
+        err.error = [{
+            message: "You currently do not have any reviews",
+            statusCode: 404
+        }]
+        return next(err)
+    }
     let reviewswithout;
     reviews.forEach(review => {
         reviewswithout = review.Reviews
@@ -530,16 +541,6 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
     const { url, preview } = req.body
     const spot = await Spot.findByPk(spotId)
 
-    if(req.user.id !== spot.ownerId) {
-        const err = new Error('Requires proper authorization')
-        err.title = 'Requires proper authorization'
-        err.status = 403;
-        err.errors = [{
-            message: "Requires proper authorization",
-            statusCode: 404
-        }]
-        return next(err)
-    }
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -550,6 +551,17 @@ router.post('/:spotId/images', requireAuth, async (req,res,next) => {
         }]
         return next(err)
     }
+    if(req.user.id !== spot.ownerId) {
+        const err = new Error('Requires proper authorization')
+        err.title = 'Requires proper authorization'
+        err.status = 403;
+        err.errors = [{
+            message: "Requires proper authorization",
+            statusCode: 404
+        }]
+        return next(err)
+    }
+
     const spotimage = await SpotImage.create({
         spotId: spotId,
         url,
@@ -679,9 +691,10 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
         }]
         return next(err)
     }
-    const spot = await Spot.findOne({
+    const spot = await Spot.findAll({
         where: { id: spotId }
     })
+    console.log(spot)
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
@@ -694,8 +707,16 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
     }
 
     let bookings
-    if(spot.ownerId === userId) {
+    let ownerspotId;
+    spot.forEach(spots => {
+       ownerspotId=  spots.ownerId
+    })
+
+    if(ownerspotId === userId) {
        bookings = await Booking.findAll({
+        where:{
+            spotId: spotId
+        },
            exclude: ["createdAt", "updatedAt"],
 
             include: {
@@ -705,13 +726,25 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
 
         })
     }
-    if(spot.ownerId !== userId) {
+    if(ownerspotId !== userId) {
         bookings = await Booking.findAll({
+            where:{
+                spotId: spotId
+            },
 
             attributes: ['spotId', 'startDate', 'endDate']
         })
     }
-
+    if (Array.isArray(bookings) && bookings.length === 0) {
+        const err = new Error('You currently do not have any bookings')
+        err.title = 'Booking does not exist'
+        err.status = 404
+        err.error = [{
+            message: "You currently do not have any bookings",
+            statusCode: 404
+        }]
+        return next(err)
+    }
 
     return res.json({
         bookings
