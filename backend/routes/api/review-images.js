@@ -10,30 +10,35 @@ const { INTEGER, DATE } = require('sequelize');
 router.delete('/:imageId', requireAuth, async(req, res, next) => {
     const { imageId } = req.params
     const images = await ReviewImage.findByPk(imageId)
-    const reviews = await Review.findAll()
+    console.log(images)
+    if(!images) {
+        const err = new Error('Image does not exist')
+        err.title = 'Image couldn\'t be found'
+        err.status = 404
+        err.error = [{
+            message: "Image couldn't be found",
+            statusCode: 404
+        }]
+        return next(err)
+       }
+    const reviews = await Review.findOne({
+        where: {
+            id: images.reviewId
 
-   if(!images) {
-    const err = new Error('Image does not exist')
-    err.title = 'Image couldn\'t be found'
+        }
+    })
+
+   if(!reviews) {
+    const err = new Error('Review does not exist')
+    err.title = 'Review couldn\'t be found'
     err.status = 404
     err.error = [{
-        message: "Image couldn't be found",
+        message: "Review couldn't be found",
         statusCode: 404
     }]
     return next(err)
    }
-let userId;
-let reviewId;
-
-reviews.forEach(review => {
-    userId = review.userId
-    reviewId = review.id
-})
-// console.log(images.reviewId)
-// console.log({reviewId})
-// console.log({userId})
-// console.log(req.user.id)
-   if((images.reviewId !== reviewId) || (req.user.id !== userId)) {
+   if(req.user.id !== reviews.userId) {
     const err = new Error('Authorization required')
     err.title = 'Authorization required'
     err.status = 403;
