@@ -126,7 +126,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         return next(err)
     }
 
-    res.json(reviews)
+    res.json([reviews])
 })
 
 router.put('/:reviewId', requireAuth,  async (req,res, next) => {
