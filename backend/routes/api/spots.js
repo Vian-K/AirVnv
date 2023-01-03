@@ -504,16 +504,8 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
         return next(err)
 
     }
-    const spot = await Spot.findAll()
-    console.log(id)
-
-    let ownerId;
-    spot.forEach(sp => {
-        ownerId = sp.ownerId
-
-    })
-    console.log(ownerId)
-    if(id !== ownerId) {
+   
+    if(req.user.id !== spots.ownerId) {
         const err = new Error('Authorization required')
         err.title = 'Authorization required'
         err.status = 403;
