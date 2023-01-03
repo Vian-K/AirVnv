@@ -23,11 +23,17 @@ router.delete('/:imageId', requireAuth, async(req, res, next) => {
     return next(err)
    }
 let userId;
+let reviewId;
+
 reviews.forEach(review => {
     userId = review.userId
+    reviewId = review.id
 })
-
-   if(req.user.id !== userId) {
+// console.log(images.reviewId)
+// console.log({reviewId})
+// console.log({userId})
+// console.log(req.user.id)
+   if((images.reviewId !== reviewId) || (req.user.id !== userId)) {
     const err = new Error('Authorization required')
     err.title = 'Authorization required'
     err.status = 403;
