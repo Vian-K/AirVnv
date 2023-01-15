@@ -1,0 +1,33 @@
+.form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.ul {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.password {
+    padding:10px;
+
+}
+
+.label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+
+}
+.Button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    margin: 0 auto;
+}
