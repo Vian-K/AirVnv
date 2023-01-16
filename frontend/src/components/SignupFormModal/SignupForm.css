@@ -1,7 +1,8 @@
-.form1 {
+.form {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    padding: 10px;
 }
 
 .ul {
@@ -14,7 +15,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 auto
+    margin: 0 auto;
+    padding: 15px
 }
 
 .password {
@@ -35,5 +37,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 auto
+    margin: 0 auto;
+
 }

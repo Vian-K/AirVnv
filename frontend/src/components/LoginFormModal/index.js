@@ -11,7 +11,7 @@ function LoginFormModal() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
 
- 
+
   // if (sessionUser) return (
   //   <Redirect to="/" />
   // );
@@ -28,6 +28,7 @@ function LoginFormModal() {
 
   return (
     <form className="form" onSubmit={handleSubmit}>
+      <h1 className="h1" >Log In</h1>
       <ul className="ul">
         {errors.map((error, idx) => <li key={idx}>{error}</li>)}
       </ul>
