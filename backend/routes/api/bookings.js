@@ -48,7 +48,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
             message: "Spots couldn't be found",
             statusCode: 404
         }]
-        console.log(err)
+    
         return next(err)
     }
     let payload = []
@@ -206,7 +206,7 @@ if(conflict === true) {
         }
         return next(err)
     }
-    
+
     if(currentDate >= bookings.startDate) {
         const err = new Error('Past bookings can\'t be modified')
             err.title = 'Past bookings can\'t be modified'

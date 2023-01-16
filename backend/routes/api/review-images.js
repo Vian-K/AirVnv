@@ -10,7 +10,7 @@ const { INTEGER, DATE } = require('sequelize');
 router.delete('/:imageId', requireAuth, async(req, res, next) => {
     const { imageId } = req.params
     const images = await ReviewImage.findByPk(imageId)
-    console.log(images)
+  
     if(!images) {
         const err = new Error('Image does not exist')
         err.title = 'Image couldn\'t be found'

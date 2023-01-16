@@ -135,7 +135,7 @@ router.put('/:reviewId', requireAuth,  async (req,res, next) => {
     const { reviewId } = req.params
     const { review, stars } = req.body
     const reviews = await Review.findByPk(reviewId)
-    console.log(reviews)
+   
     if(!reviews) {
         const err = new Error('Review does not exist')
         err.title = 'Review couldn\'t be found'

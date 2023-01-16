@@ -25,9 +25,9 @@ router.use('/review-images', reviewimagesRouter)
 
 
 
-// router.post('/test', function(req, res) {
-//     res.json({ requestBody: req.body });
-// });
+router.post('/test', function(req, res) {
+    res.json({ requestBody: req.body });
+});
 
 module.exports = router;
  // WXdQdNhx-I_7OlLpiA0CyGuvIvxC7mAkeKjo

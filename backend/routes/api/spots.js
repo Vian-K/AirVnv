@@ -143,7 +143,7 @@ router.get('/', validateQueryError, async (req, res) => {
     if(Object.keys(pricefilter).length > 0) {
         optionalParams.where.price = pricefilter
     }
-    console.log(pricefilter)
+
     const spots = await Spot.findAll({
         include: [
             {
@@ -686,7 +686,7 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
     const spot = await Spot.findAll({
         where: { id: spotId }
     })
-    console.log(spot)
+  
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
