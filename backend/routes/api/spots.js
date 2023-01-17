@@ -187,22 +187,23 @@ router.get('/', validateQueryError, async (req, res) => {
                 spot.previewImage = image.url
             }
         })
-
         let countRating = 0;
         spot.Reviews.forEach(count => {
             countRating += count.stars
         })
-        let average = countRating / reviews.length
-        if(!spots.previewImage) {
-            spots.previewImage = 'no image found'
-        }
-        if(!spot.avgRating) {
-            spot.avgRating = 'No reviews'
-        } else {
+        if(reviews.length){
+            let average = countRating / reviews.length
             spot.avgRating = average
+        } else {
+            spot.avgRating = 'No reviews'
+        }
+
+        if(!spot.previewImage) {
+            spot.previewImage = 'no image found'
         }
         delete spot.SpotImages
         delete spot.Reviews
+        // spot.reviews = reviews
     }
 
 res.json({Spots: payload, page, size})
@@ -686,7 +687,7 @@ router.get('/:spotId/bookings', requireAuth, async (req,res,next) => {
     const spot = await Spot.findAll({
         where: { id: spotId }
     })
-  
+
     if(!spot) {
         const err = new Error('Spot does not exist')
         err.title = 'Spot couldn\'t be found'
