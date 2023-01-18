@@ -24,5 +24,6 @@
     position: absolute;
     background-color:white;
     width: 30%;
-    height: 70%
+    height: 70%;
+    overflow: auto;
   }

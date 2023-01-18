@@ -1,0 +1,12 @@
+.images {
+
+    display: grid;
+    grid-auto-flow: dense;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 16px
+}
+
+img {
+    min-width: 350px;
+    max-width: 200px;
+}
