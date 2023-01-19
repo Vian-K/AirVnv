@@ -42,22 +42,22 @@ export const getSpots = () => async (dispatch) => {
 
 export const getOneSpot = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
+
     const spotData = await response.json()
-    console.log("spotData", spotData)
     dispatch(loadOneSpot(spotData))
     return response
 }
 
-export const addSpot = (spots) => async (dispatch) => {
-    const { spotImage } = spots
+export const addSpot = (spots, spotImage) => async (dispatch) => {
+   
     const response = await csrfFetch('/api/spots', {
         method: 'POST',
         body: JSON.stringify(spots)
     })
     if(response.ok){
-        const createdSpot = await response.json()
+        const spotData = await response.json()
 
-        const res = await csrfFetch(`api/spots/${createdSpot.id}/images`, {
+        const res = await csrfFetch(`/api/spots/${spotData.id}/images`, {
             method: 'POST',
             body: JSON.stringify({
                 url: spotImage,
@@ -67,9 +67,9 @@ export const addSpot = (spots) => async (dispatch) => {
         if(res.ok){
 
             const data = await response.json()
-
-            dispatch(createSpots(data))
-            return data
+            const combinedData = {...data,...spotData}
+            dispatch(createSpots(combinedData))
+            return combinedData
         }
     }
 }
@@ -90,11 +90,7 @@ export const editSpot = (spots, spotId) => async (dispatch) => {
     }
 }
 
-const initialState = {
-    allSpots: {},
-    singleSpot: {}
-
-}
+const initialState = { allSpots: {}, singleSpot: {} }
 
 export const spotsReducer = (state = initialState, action) => {
     let newState;
@@ -117,7 +113,7 @@ export const spotsReducer = (state = initialState, action) => {
         case LOAD_ONE_SPOT:
             // newState = {...state.singleSpot, [action.payload.id]: action.payload}
             newState = {...state}
-            const singleSpotCopy = {...state.singleSpot, [action.payload.id]: action.payload}
+            const singleSpotCopy = {...state, [action.payload.id]: action.payload}
         // console.log("action payload:", action.payload)
         // console.log("singleSpotobject", singleSpotCopy)
             newState.singleSpot = singleSpotCopy

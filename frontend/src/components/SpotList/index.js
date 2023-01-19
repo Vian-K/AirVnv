@@ -8,13 +8,13 @@ import './SpotList.css';
  const SpotList = () => {
     const dispatch = useDispatch()
     const spots = Object.values(useSelector(state => state.spot.allSpots))
-    console.log("spots console log ", spots)
+
 useEffect(() => {
     dispatch(getSpots())
 },[dispatch])
 
     return (
-        <div>
+        <div className="maincontainer">
         <ul>
             {spots.map(({id, name, previewImage, city, state, price, avgRating}) => {
                 return (

@@ -16,7 +16,7 @@ export const EditSpotModal = () => {
       // const [image, setImage ] = useState(null)
       const [errors, setErrors] = useState([]);
       const { closeModal } = useModal()
-      const dispatch = useDispatch
+      const dispatch = useDispatch()
 
 
 const handleSubmit = (e) => {
@@ -100,6 +100,7 @@ const handleSubmit = (e) => {
         />
       </label>
       <button className="Button" type="Submit">Submit</button>
+      <button className="Button" type="Delete">Delete</button>
       </form>
     )
 }

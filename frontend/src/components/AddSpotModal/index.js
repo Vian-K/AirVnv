@@ -22,7 +22,6 @@ export const AddSpotModal = () => {
         e.preventDefault()
         setErrors([])
         return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, lat:15, lng:15, image}))
-
         .then(closeModal)
         .catch(async (res) => {
             const data = await res.json()
@@ -102,7 +101,7 @@ export const AddSpotModal = () => {
       <label className="label">
         Add an Image
         <input className="input"
-          type="input"
+          type="text"
           value={image}
           onChange={(e) => setImage(e.target.value)}
           required

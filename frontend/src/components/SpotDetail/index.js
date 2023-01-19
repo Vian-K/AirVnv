@@ -8,7 +8,7 @@ import OpenModalButton from '../OpenModalButton';
 const SpotDetail = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-    const spotDetail = useSelector(state => state.spot[id])
+    const spotDetail = useSelector(state => state.spot.allSpots[id])
 
 
     useEffect(() => {
@@ -27,9 +27,8 @@ const SpotDetail = () => {
             <img src={spotDetail.previewImage} alt={spotDetail.name} />
             <p>Avg Rating: {spotDetail.avgRating}</p>
             <OpenModalButton
-      buttonText="Edit a Spot"
-      modalComponent={<EditSpotModal />}
-      />
+                buttonText="Edit a Spot"
+                modalComponent={<EditSpotModal />} />
         </div>
     )
 }
