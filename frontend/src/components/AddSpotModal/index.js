@@ -13,7 +13,7 @@ export const AddSpotModal = () => {
     const [name, setName ] = useState('')
     const [description, setDescription ] = useState('')
     const [price, setPrice ] = useState('')
-    const [image, setImage ] = useState(null)
+    const [spotImage, setSpotImage ] = useState(null)
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal()
     const dispatch = useDispatch()
@@ -21,19 +21,20 @@ export const AddSpotModal = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         setErrors([])
-        return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, lat:15, lng:15, image}))
+        return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, spotImage, lat:15, lng:15}))
         .then(closeModal)
-        .catch(async (res) => {
-            const data = await res.json()
-            if(data && data.errors) setErrors(data.errors)
-        })
+        // .catch(async (res) => {
+        //   console.log(res)
+        //     const data = await res.json()
+        //     if(data && data.errors) setErrors(data.errors)
+        // })
     }
 
     return (
         <form className="addspotform" onSubmit={handleSubmit}>
             <h1 className="h1">Add a Spot</h1>
             <ul className="ul">
-        {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+        {/* {errors.map((error, idx) => <li key={idx}>{error}</li>)} */}
       </ul>
       <label className="label">
         Address
@@ -102,8 +103,8 @@ export const AddSpotModal = () => {
         Add an Image
         <input className="input"
           type="text"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+          value={spotImage}
+          onChange={(e) => setSpotImage(e.target.value)}
           required
         />
       </label>

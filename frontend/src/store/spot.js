@@ -44,30 +44,33 @@ export const getOneSpot = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
 
     const spotData = await response.json()
+    console.log("spotData=", spotData)
     dispatch(loadOneSpot(spotData))
     return response
 }
 
-export const addSpot = (spots, spotImage) => async (dispatch) => {
-   
+export const addSpot = (spot, spotImage) => async (dispatch) => {
+    console.log("spots", spot)
     const response = await csrfFetch('/api/spots', {
         method: 'POST',
-        body: JSON.stringify(spots)
+        body: JSON.stringify(spot)
     })
     if(response.ok){
+        console.log("spots=", spot)
         const spotData = await response.json()
 
         const res = await csrfFetch(`/api/spots/${spotData.id}/images`, {
             method: 'POST',
             body: JSON.stringify({
-                url: spotImage,
+                url: spot.spotImage,
                 preview: true
             })
         })
         if(res.ok){
-
-            const data = await response.json()
-            const combinedData = {...data,...spotData}
+            console.log("spotsData=", spotData)
+            const imageData = await res.json()
+            console.log("imageData=", imageData)
+            const combinedData = {previewImage: imageData.url, ...spotData}
             dispatch(createSpots(combinedData))
             return combinedData
         }
@@ -77,14 +80,16 @@ export const addSpot = (spots, spotImage) => async (dispatch) => {
 
 
 
-export const editSpot = (spots, spotId) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spotId}`, {
+export const editSpot = (spots) => async (dispatch) => {
+    console.log("spots", spots)
+    const response = await csrfFetch(`/api/spots/${spots.id}`, {
         method:'PUT',
         body:JSON.stringify(spots)
     })
+
     if(response.ok){
         const data = await response.json()
-        dispatch(loadOneSpot(editSpots(data)))
+        dispatch(editSpots(data))
         return response
 
     }
@@ -105,26 +110,21 @@ export const spotsReducer = (state = initialState, action) => {
         return newState
         case ADD_SPOTS:
             newState = {...state}
-            const newSpot = {...state.singleSpot}
-            newSpot[action.payload.singleSpot] = action.payload.singleSpot
-            newState.spots = newSpot
+            newState.allSpots[action.payload.id] = action.payload
             return newState
 
         case LOAD_ONE_SPOT:
-            // newState = {...state.singleSpot, [action.payload.id]: action.payload}
             newState = {...state}
-            const singleSpotCopy = {...state, [action.payload.id]: action.payload}
-        // console.log("action payload:", action.payload)
-        // console.log("singleSpotobject", singleSpotCopy)
-            newState.singleSpot = singleSpotCopy
 
-            return newState.singleSpot
+            newState.singleSpot = action.payload
+            return newState
 
         case EDIT_SPOTS:
             newState = {...state}
-            const editSpot = {...state.singleSpot}
-            newSpot[action.payload.singleSpot] = action.payload.singleSpot
-            newState.spots = editSpot
+            console.log("action.payload", action.payload)
+
+            newState.singleSpot[action.payload.id] = action.payload
+
             return newState
 
 

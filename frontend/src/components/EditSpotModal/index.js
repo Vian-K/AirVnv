@@ -6,13 +6,16 @@ import { useParams } from "react-router-dom";
 import * as spotActions from "../../store/spot"
 
 export const EditSpotModal = () => {
-    const [address, setAddress ] = useState('')
-    const [city, setCity ] = useState('')
-    const [state, setState ] = useState('')
-      const [country, setCountry ] = useState('')
-      const [name, setName ] = useState('')
-      const [description, setDescription ] = useState('')
-      const [price, setPrice ] = useState('')
+  const {id} = useParams()
+
+  const spots = useSelector(state => state.spot.singleSpot)
+    const [address, setAddress ] = useState(spots.address)
+    const [city, setCity ] = useState(spots.city)
+    const [state, setState ] = useState(spots.state)
+      const [country, setCountry ] = useState(spots.country)
+      const [name, setName ] = useState(spots.name)
+      const [description, setDescription ] = useState(spots.description)
+      const [price, setPrice ] = useState(spots.price)
       // const [image, setImage ] = useState(null)
       const [errors, setErrors] = useState([]);
       const { closeModal } = useModal()
@@ -22,7 +25,7 @@ export const EditSpotModal = () => {
 const handleSubmit = (e) => {
     e.preventDefault()
     setErrors([])
-    return dispatch(spotActions.editSpot({address, city, state, country, name, description, price, lat:15, lng:15}))
+    return dispatch(spotActions.editSpot({id, address, city, state, country, name, description, price, lat:15, lng:15}))
     .then(closeModal)
     .catch(async (res) => {
         const data = await res.json()
@@ -100,7 +103,7 @@ const handleSubmit = (e) => {
         />
       </label>
       <button className="Button" type="Submit">Submit</button>
-      <button className="Button" type="Delete">Delete</button>
+
       </form>
     )
 }

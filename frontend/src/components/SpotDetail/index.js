@@ -8,14 +8,14 @@ import OpenModalButton from '../OpenModalButton';
 const SpotDetail = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-    const spotDetail = useSelector(state => state.spot.allSpots[id])
-
+    const spotDetail = useSelector(state => state.spot.singleSpot)
+    // console.log("spotDetail:", spotDetail)
 
     useEffect(() => {
         dispatch(getOneSpot(id))
     }, [dispatch, id])
 
-    if(!spotDetail) {
+    if(!spotDetail || !spotDetail.name) {
         return <p>Spot doesn't exist</p>
     }
     return(
@@ -24,7 +24,10 @@ const SpotDetail = () => {
             <p>{spotDetail.address}, {spotDetail.city}, {spotDetail.state}, {spotDetail.country}</p>
             <p>{spotDetail.description}</p>
             <p>{spotDetail.price}</p>
-            <img src={spotDetail.previewImage} alt={spotDetail.name} />
+            {spotDetail.SpotImages.map(image => {
+                return <img src={image.url} alt={spotDetail.name} />
+
+            })}
             <p>Avg Rating: {spotDetail.avgRating}</p>
             <OpenModalButton
                 buttonText="Edit a Spot"
