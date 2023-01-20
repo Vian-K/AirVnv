@@ -5,6 +5,7 @@
 .images {
 
     display: inline-block;
+
     padding: 5px;
     grid-gap: 16px;
 
@@ -15,4 +16,5 @@
 img {
     min-width: 250px;
     max-width: 200px;
+    border-radius: 10px;
 }

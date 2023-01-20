@@ -13,7 +13,7 @@ export const AddSpotModal = () => {
     const [name, setName ] = useState('')
     const [description, setDescription ] = useState('')
     const [price, setPrice ] = useState('')
-    const [spotImage, setSpotImage ] = useState(null)
+    const [spotImage, setSpotImage ] = useState('')
     const [errors, setErrors] = useState([]);
     const { closeModal } = useModal()
     const dispatch = useDispatch()
@@ -22,7 +22,10 @@ export const AddSpotModal = () => {
         e.preventDefault()
         setErrors([])
         return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, spotImage, lat:15, lng:15}))
-        .then(closeModal)
+        .then(() => {
+          closeModal()
+
+        })
         // .catch(async (res) => {
         //   console.log(res)
         //     const data = await res.json()

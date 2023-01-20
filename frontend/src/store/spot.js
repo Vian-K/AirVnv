@@ -33,6 +33,11 @@ export const addImages = (spots) => ({
     payload: spots
 })
 
+export const deleteSpots = (spots) => ({
+    type: DELETE_SPOTS,
+    payload: spots
+})
+
 export const getSpots = () => async (dispatch) => {
     const response = await csrfFetch('/api/spots')
     const data = await response.json()
@@ -44,19 +49,19 @@ export const getOneSpot = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}`)
 
     const spotData = await response.json()
-    console.log("spotData=", spotData)
+
     dispatch(loadOneSpot(spotData))
     return response
 }
 
-export const addSpot = (spot, spotImage) => async (dispatch) => {
-    console.log("spots", spot)
+export const addSpot = (spot) => async (dispatch) => {
+
     const response = await csrfFetch('/api/spots', {
         method: 'POST',
         body: JSON.stringify(spot)
     })
     if(response.ok){
-        console.log("spots=", spot)
+
         const spotData = await response.json()
 
         const res = await csrfFetch(`/api/spots/${spotData.id}/images`, {
@@ -67,9 +72,9 @@ export const addSpot = (spot, spotImage) => async (dispatch) => {
             })
         })
         if(res.ok){
-            console.log("spotsData=", spotData)
+
             const imageData = await res.json()
-            console.log("imageData=", imageData)
+
             const combinedData = {previewImage: imageData.url, ...spotData}
             dispatch(createSpots(combinedData))
             return combinedData
@@ -78,10 +83,8 @@ export const addSpot = (spot, spotImage) => async (dispatch) => {
 }
 
 
-
-
 export const editSpot = (spots) => async (dispatch) => {
-    console.log("spots", spots)
+
     const response = await csrfFetch(`/api/spots/${spots.id}`, {
         method:'PUT',
         body:JSON.stringify(spots)
@@ -90,8 +93,20 @@ export const editSpot = (spots) => async (dispatch) => {
     if(response.ok){
         const data = await response.json()
         dispatch(editSpots(data))
-        return response
+        return data
 
+    }
+}
+
+export const deleteSpot = (spots) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${spots.id}`, {
+        method: 'DELETE',
+        // body:JSON.stringify(spots)
+    })
+    if(response.ok) {
+        const data = await response.json()
+        dispatch(deleteSpots(data))
+        return response
     }
 }
 
@@ -110,7 +125,12 @@ export const spotsReducer = (state = initialState, action) => {
         return newState
         case ADD_SPOTS:
             newState = {...state}
+            let newStateCopy = {}
             newState.allSpots[action.payload.id] = action.payload
+            console.log("newState=", newState)
+            newState.allSpots = newStateCopy
+
+            console.log("newStateCopy=", newStateCopy)
             return newState
 
         case LOAD_ONE_SPOT:
@@ -120,22 +140,31 @@ export const spotsReducer = (state = initialState, action) => {
             return newState
 
         case EDIT_SPOTS:
-            newState = {...state}
-            console.log("action.payload", action.payload)
+            return {...state,
+                singleSpot: {
+                    ...state.singleSpot,
+                    ...action.payload
+                }
+            }
 
-            newState.singleSpot[action.payload.id] = action.payload
-
-            return newState
-
-
-            case ADD_IMAGE:
+        case ADD_IMAGE:
                 newState = {...state}
                 const newSpotImage = {...state.singleSpot}
-                console.log(newSpotImage)
                 newSpotImage[action.payload.singleSpot] = action.payload.singleSpot
                 newState.spots = newSpotImage
                 return newState
 
+        case DELETE_SPOTS:
+            newState={...state}
+            let singleSpotCopy = {}
+            let SpotsCopy = {}
+            newState.singleSpot = singleSpotCopy
+            newState.allSpots = SpotsCopy
+
+            delete singleSpotCopy.singleSpot
+            delete SpotsCopy.allSpots
+
+            return newState
                 default:
                     return state
     }

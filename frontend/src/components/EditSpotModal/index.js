@@ -1,37 +1,43 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../context/Modal";
 import {useState} from 'react'
-import { useParams } from "react-router-dom";
-
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 import * as spotActions from "../../store/spot"
 
 export const EditSpotModal = () => {
-  const {id} = useParams()
+  // const {id} = useParams()
 
   const spots = useSelector(state => state.spot.singleSpot)
-    const [address, setAddress ] = useState(spots.address)
-    const [city, setCity ] = useState(spots.city)
-    const [state, setState ] = useState(spots.state)
-      const [country, setCountry ] = useState(spots.country)
-      const [name, setName ] = useState(spots.name)
-      const [description, setDescription ] = useState(spots.description)
-      const [price, setPrice ] = useState(spots.price)
-      // const [image, setImage ] = useState(null)
-      const [errors, setErrors] = useState([]);
-      const { closeModal } = useModal()
-      const dispatch = useDispatch()
+  const [address, setAddress ] = useState(spots.address)
+  const [city, setCity ] = useState(spots.city)
+  const [state, setState ] = useState(spots.state)
+  const [country, setCountry ] = useState(spots.country)
+  const [name, setName ] = useState(spots.name)
+  const [description, setDescription ] = useState(spots.description)
+  const [price, setPrice ] = useState(spots.price)
+  // const [image, setImage ] = useState(null)
+  const [errors, setErrors] = useState([]);
+  const { closeModal } = useModal()
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const id = spots.id
 
-
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     setErrors([])
+
     return dispatch(spotActions.editSpot({id, address, city, state, country, name, description, price, lat:15, lng:15}))
-    .then(closeModal)
-    .catch(async (res) => {
-        const data = await res.json()
-        if(data && data.errors) setErrors(data.errors)
+    .then(() => {
+      closeModal()
+      // history.push(`/spots/${id}`)
     })
-}
+
+    .catch(async (res) => {
+      const data = await res.json()
+      if(data && data.errors) setErrors(data.errors)
+    })
+  }
 
     return(
         <form className="editspotform" onSubmit={handleSubmit}>
@@ -102,7 +108,8 @@ const handleSubmit = (e) => {
           required
         />
       </label>
-      <button className="Button" type="Submit">Submit</button>
+
+<button className="Button" type="Submit">Submit</button>
 
       </form>
     )
