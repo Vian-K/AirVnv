@@ -196,7 +196,7 @@ router.get('/', validateQueryError, async (req, res) => {
             let average = countRating / reviews.length
             spot.avgRating = average
         } else {
-            spot.avgRating = 'No reviews'
+            spot.avgRating = '0'
         }
 
         if(!spot.previewImage) {
@@ -225,11 +225,16 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
         return next(err)
     }
     let id;
-    const reviewCheck = await Review.findAll()
-        reviewCheck.forEach(review => {
-           id = review.dataValues.userId
-        })
-        if(id === userId) {
+    const reviewCheck = await Review.findOne({
+        where: {
+            userId,
+            spotId
+        }
+    })
+        // reviewCheck.forEach(review => {
+        //    id = review.dataValues.userId
+        // })
+        if(reviewCheck) {
         const err = new Error('User already has a review for this spot')
 
         err.title = 'User already has a review for this spot'
@@ -271,7 +276,7 @@ router.post('/:spotId/reviews', requireAuth, async (req,res,next) => {
         }
 
 })
-// ASK IF SPOT DATA IS REQUIRED TO BE REMOVED
+
 
 router.get('/:spotId/reviews', async (req,res, next)=> {
     const { spotId } = req.params
@@ -485,7 +490,7 @@ router.get('/:spotId', async(req,res, next) => {
 
 
     if(!spots.avgStarRating) {
-        spots.avgStarRating = "No reviews yet"
+        spots.avgStarRating = "0"
     }
     if(!spots.numReviews) {
         spots.numReviews = "No reviews yet"
