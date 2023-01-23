@@ -195,11 +195,7 @@ router.get('/', validateQueryError, async (req, res) => {
             let average = countRating / reviews.length
             spot.avgRating = average
         } else {
-<<<<<<< HEAD
-            spot.avgRating = 'No reviews'
-=======
             spot.avgRating = '0'
->>>>>>> dev
         }
 
         if(!spot.previewImage) {
