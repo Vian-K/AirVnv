@@ -32,3 +32,33 @@
 
     margin: 0 auto;
 }
+
+.loginspotmodal {
+    font-family:'Lato', sans-serif;
+}
+
+.loginButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 18px;
+    border: transparent;
+    background-color: white;
+    padding: 5px;
+}
+
+.loginButton:hover {
+    text-decoration: underline;
+}
+
+.input {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}

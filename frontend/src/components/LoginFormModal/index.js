@@ -33,6 +33,9 @@ function LoginFormModal() {
 
 
   return (
+    <div className="loginspotmodal">
+
+
     <form className="form" onSubmit={handleSubmit}>
       <h1 className="h1" >Log In</h1>
         {/* <button className="DemoUserButton"
@@ -58,8 +61,9 @@ function LoginFormModal() {
           required
         />
       </label>
-      <button className="Button" type="submit">Log In</button>
+      <button className="loginButton" type="submit">Log In</button>
     </form>
+    </div>
   );
 }
 
