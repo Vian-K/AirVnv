@@ -11,10 +11,12 @@ const ReviewForm = () => {
     const [review, setReviews ] = useState()
     const [stars, setStars] = useState("5")
     const [errors, setErrors] = useState([]);
+    const [hasError, setHasError] = useState(false)
     const [isReviewOpen, setIsReviewOpen] = useState(false);
-
+    const [errorVisible, setErrorVisible] = useState(false)
     const reviewsObj = useSelector(state => state.review.allReviews)
     const reviews = Object.values(reviewsObj)
+
 
 
 
@@ -33,6 +35,7 @@ const ReviewForm = () => {
         .catch(async (res) => {
           const data = await res.json()
           if(data && data.errors) setErrors(data.errors)
+          setHasError(true)
 
         })
       }
@@ -82,7 +85,15 @@ const ReviewForm = () => {
                 </div>
 
                 <h4 className="reviewdivider">{reviews.length} reviews</h4>
-                {errors.map((error, idx) => <li className="errors" key={idx}>{error.message}</li>)}
+
+                {errors.map((error, idx) => {
+                      setTimeout(()=>{
+                        setErrors(errors.filter((_, i) => i !== idx))
+                      },3000)
+                      return <li className="errors" key={idx}>{error.message}</li>
+                    })}
+
+
 
 
 
@@ -98,7 +109,7 @@ const ReviewForm = () => {
                             <div className="reviewDataStars">
                              {review.stars}
                             </div>
-                            
+
                             <button className="deleteButtonInReviews" type="Delete"
 
                         onClick={() => dispatch(reviewActions.deleteReviews(review))

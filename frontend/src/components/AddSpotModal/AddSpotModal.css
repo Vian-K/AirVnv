@@ -4,7 +4,9 @@
     margin: 25px;
 }
 
-
+.ul {
+    color: red;
+}
 
 #addSpotModal {
     border-radius: 10px;

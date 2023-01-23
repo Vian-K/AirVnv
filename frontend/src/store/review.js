@@ -80,10 +80,10 @@ export const reviewsReducer = (state = initialState, action) => {
         case DELETE_REVIEW:
             newState = {...state}
             let allReviewsCopy= {...state}
-            console.log("allReviewsCopy=", allReviewsCopy)
-            // delete allReviewsCopy.allReviews
+
+            delete allReviewsCopy.allReviews
             newState.allReviews = allReviewsCopy
-            console.log("action.payload=", action)
+
 
             return newState
 
