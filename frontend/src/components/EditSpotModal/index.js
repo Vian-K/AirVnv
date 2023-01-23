@@ -46,7 +46,7 @@ export const EditSpotModal = () => {
 
 
         <form className="editspotform" onSubmit={handleSubmit}>
-            <h1 className="h1">Edit a Spot</h1>
+            <h1 className="editspottitle">Edit a Spot</h1>
             <ul className="ul">
         {errors.map((error, idx) => <li key={idx}>{error}</li>)}
       </ul>
