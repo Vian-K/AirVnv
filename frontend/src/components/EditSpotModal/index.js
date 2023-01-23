@@ -4,6 +4,8 @@ import {useState} from 'react'
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import * as spotActions from "../../store/spot"
+import './EditSpotModal.css'
+
 
 export const EditSpotModal = () => {
   // const {id} = useParams()
@@ -40,6 +42,9 @@ export const EditSpotModal = () => {
   }
 
     return(
+      <div className="editspotmodal">
+
+
         <form className="editspotform" onSubmit={handleSubmit}>
             <h1 className="h1">Edit a Spot</h1>
             <ul className="ul">
@@ -109,9 +114,10 @@ export const EditSpotModal = () => {
         />
       </label>
 
-<button className="Button" type="Submit">Submit</button>
+<button className="EditButton" type="Submit">Submit</button>
 
       </form>
+      </div>
     )
 }
 

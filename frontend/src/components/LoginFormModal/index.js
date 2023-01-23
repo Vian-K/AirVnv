@@ -35,8 +35,8 @@ function LoginFormModal() {
   return (
     <form className="form" onSubmit={handleSubmit}>
       <h1 className="h1" >Log In</h1>
-        <button className="DemoUserButton"
-        onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"})).then(closeModal) }>Demo User</button>
+        {/* <button className="DemoUserButton"
+        onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"})).then(closeModal) }>Demo User</button> */}
       <ul className="ul">
         {errors.map((error, idx) => <li key={idx}>{error}</li>)}
       </ul>

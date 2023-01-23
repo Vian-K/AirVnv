@@ -4,7 +4,8 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-
+import './Navigation.css';
+import './Capture.PNG'
 function ProfileButton({ user }) {
 console.log("user", user)
   const dispatch = useDispatch();
@@ -44,35 +45,44 @@ console.log("user", user)
     <>
     <div className="Nav">
 
+      <div className="profile_dropdown">
 
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+
+      <button className="profile_button" onClick={openMenu}>
+        {/* <i className="fas fa-user-circle" /> */}
+
       </button>
       <ol className={ulClassName} ref={ulRef}>
         {user ? (
           <>
+          <div className="user-content">
+
             <li>{user.username}</li>
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
             <li>
-              <button onClick={logout}>Log Out</button>
+              <button className="logoutbutton"onClick={logout}>Log Out</button>
             </li>
+          </div>
           </>
         ) : (
           <>
-            <OpenModalMenuItem
-              itemText="Log In"
+            <OpenModalMenuItem id="modal"
+              itemText={<span className="item-text-log-in">Log In</span>}
               onItemClick={closeMenu}
               modalComponent={<LoginFormModal />}
             />
             <OpenModalMenuItem
-              itemText="Sign Up"
+              itemText={<span className="item-text-sign-up">Sign Up</span>}
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
           </>
         )}
+        <button className="DemoUserButton"
+        onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))}>Demo User</button>
       </ol>
+      </div>
     </div>
     </>
   );

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import * as spotActions from "../../store/spot"
 import {Redirect} from 'react-router-dom'
+import "./AddSpotModal.css"
 
 export const AddSpotModal = () => {
   const [address, setAddress ] = useState('')
@@ -18,6 +19,7 @@ export const AddSpotModal = () => {
     const { closeModal } = useModal()
     const dispatch = useDispatch()
 
+
     const handleSubmit = (e) => {
         e.preventDefault()
         setErrors([])
@@ -26,22 +28,25 @@ export const AddSpotModal = () => {
           closeModal()
 
         })
-        // .catch(async (res) => {
-        //   console.log(res)
-        //     const data = await res.json()
-        //     if(data && data.errors) setErrors(data.errors)
-        // })
+        .catch(async (res) => {
+          console.log(res)
+            const data = await res.json()
+            if(data && data.errors) setErrors(data.errors)
+        })
     }
 
     return (
+      <div className="addspotModal">
+
+
         <form className="addspotform" onSubmit={handleSubmit}>
-            <h1 className="h1">Add a Spot</h1>
+            <h1 className="formtitle">Add a Spot</h1>
             <ul className="ul">
-        {/* {errors.map((error, idx) => <li key={idx}>{error}</li>)} */}
+        {errors.map((error, idx) => <li key={idx}>{error}</li>)}
       </ul>
       <label className="label">
         Address
-        <input className="input"
+        <input className="addressinput"
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
@@ -50,7 +55,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
         City
-        <input className="input"
+        <input className="cityinput"
           type="text"
           value={city}
           onChange={(e) => setCity(e.target.value)}
@@ -59,7 +64,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
         State
-        <input className="input"
+        <input className="stateinput"
           type="text"
           value={state}
           onChange={(e) => setState(e.target.value)}
@@ -68,7 +73,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
        Country
-        <input className="input"
+        <input className="countryinput"
           type="text"
           value={country}
           onChange={(e) => setCountry(e.target.value)}
@@ -77,7 +82,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
         Name
-        <input className="input"
+        <input className="nameinput"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -86,7 +91,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
         Description
-        <input className="input"
+        <input className="descriptioninput"
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -95,7 +100,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
         Price
-        <input className="input"
+        <input className="priceinput"
           type="text"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
@@ -104,7 +109,7 @@ export const AddSpotModal = () => {
       </label>
       <label className="label">
         Add an Image
-        <input className="input"
+        <input className="imageinput"
           type="text"
           value={spotImage}
           onChange={(e) => setSpotImage(e.target.value)}
@@ -112,8 +117,9 @@ export const AddSpotModal = () => {
         />
       </label>
 
-      <button className="Button" type="Create">Create</button>
+      <button className="createButton" type="Create">Create</button>
         </form>
+        </div>
     )
 }
 

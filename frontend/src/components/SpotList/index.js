@@ -20,11 +20,12 @@ useEffect(() => {
                 return (
                 <li className="images">
                     <NavLink to={`spots/${id}`}>
-                    <img src={previewImage} alt={name} />
+                    <img id="spotlistimages"src={previewImage} alt={name} />
                     </NavLink>
-                    <p className="city/state">{city}, {state}</p>
-                    <p className="avgRating">{avgRating}</p>
-                    <p className="price">${price}</p>
+                    <p className="citystate">{city}, {state}</p>
+                    <p className="avgRating">
+                        {avgRating}</p>
+                    <p className="price">${price}/night</p>
                 </li>
                 )
             })}

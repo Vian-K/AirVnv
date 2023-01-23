@@ -125,12 +125,9 @@ export const spotsReducer = (state = initialState, action) => {
         return newState
         case ADD_SPOTS:
             newState = {...state}
-            let newStateCopy = {}
-            newState.allSpots[action.payload.id] = action.payload
-            console.log("newState=", newState)
+            let newStateCopy = {...newState.allSpots}
+            newStateCopy[action.payload.id] = action.payload
             newState.allSpots = newStateCopy
-
-            console.log("newStateCopy=", newStateCopy)
             return newState
 
         case LOAD_ONE_SPOT:
