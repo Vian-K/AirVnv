@@ -24,7 +24,7 @@ function SignupFormModal() {
     if (password === confirmPassword) {
       setErrors([]);
       return dispatch(sessionActions.signup({ email, username, firstName, lastName, password }))
-      
+
         .then(closeModal)
         .catch(async (res) => {
           const data = await res.json();
@@ -63,43 +63,43 @@ if (sessionUser) return (
             required
           />
         </label>
-        <label className="label">
+        <label className="label" id="label">
           First Name
-          <input
+          <input className="input"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
         </label>
-        <label className="label">
+        <label className="label" id="label">
           Last Name
-          <input
+          <input className="input"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
           />
         </label>
-        <label className="label">
+        <label className="label" id="label">
           Password
-          <input
+          <input className="input"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </label>
-        <label className="label">
+        <label className="label" id="label">
           Confirm Password
-          <input
+          <input className="input"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </label>
-        <button className="Button" type="submit">Sign Up</button>
+        <button className="signupButton" type="submit">Sign Up</button>
       </form>
     </>
   );
