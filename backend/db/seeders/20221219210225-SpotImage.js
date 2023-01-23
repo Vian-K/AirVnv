@@ -14,19 +14,19 @@ module.exports = {
       [
         {
           spotId: 1,
-          url: "https://a0.muscache.com/im/pictures/b0c977d9-57ba-4f70-bbb4-8b3cd3ae8dc4.jpg?im_w=720",
+          url: "https://a0.muscache.com/im/pictures/66b36bec-33e1-4b6d-b5b3-7a89faed5d30.jpg?im_w=720",
           preview: true
 
         },
         {
           spotId: 2,
-          url: "https://a0.muscache.com/im/pictures/a017859a-f4b8-499b-b871-f830b6053ad6.jpg?im_w=720",
+          url: "https://a0.muscache.com/im/pictures/0eb500ca-0f15-4889-9e1b-6156699b9505.jpg?im_w=720",
           preview: true
 
         },
         {
           spotId: 3,
-          url: "https://a0.muscache.com/im/pictures/prohost-api/Hosting-33309759/original/23cc7524-c74c-4beb-b38e-b9be24ba6249.jpeg?im_w=720",
+          url: "https://a0.muscache.com/im/pictures/3721c4eb-3da9-4526-8a19-7307de85fa1a.jpg?im_w=1200",
           preview: true
 
         }
