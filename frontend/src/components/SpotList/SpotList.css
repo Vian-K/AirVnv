@@ -1,0 +1,64 @@
+
+
+.maincontainer {
+    /* position: absolute; */
+    display: flex;
+    width: auto;
+    text-align: center;
+    /* border: 2px solid blue; */
+    top: 75px;
+}
+.images {
+
+    display: inline-block;
+    padding: 5px;
+    grid-gap: 16px;
+    margin: 0 auto;
+
+}
+
+#spotlistimages {
+    display: flex;
+    object-fit: cover;
+    width:350px;
+    height:250px;
+
+    border-radius: 10px;
+    vertical-align: middle;
+}
+
+.citystate {
+    display: flex;
+    position: relative;
+    font-weight: bold;
+    font-family: 'Lato', sans-serif;
+    bottom: 5px;
+}
+
+.avgRating {
+    display: flex;
+    position: relative;
+    justify-content: flex-end;
+    font-family:'Lato', sans-serif;
+    font-size: 18px;
+    bottom: 46px;
+
+
+
+}
+.avgRating::before {
+    content:"\2605";
+    font-size: 20px;
+    position: absolute;
+    right: 25px;
+    bottom: -1.2px;
+
+
+}
+
+.price {
+    display: flex;
+    font-family:'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}

@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import * as sessionActions from '../../store/session';
-
+import OpenModalMenuItem from './OpenModalMenuItem';
+import LoginFormModal from '../LoginFormModal';
+import SignupFormModal from '../SignupFormModal';
+import './Navigation.css';
+import './Capture.PNG'
 function ProfileButton({ user }) {
+console.log("user", user)
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
-  const ulRef = useRef()
+  const ulRef = useRef();
 
   const openMenu = () => {
     if (showMenu) return;
@@ -14,38 +19,71 @@ function ProfileButton({ user }) {
 
   useEffect(() => {
     if (!showMenu) return;
-    
+
     const closeMenu = (e) => {
-        if (!ulRef.current.contains(e.target)) {
-          setShowMenu(false);
-        }
-      };
+      if (!ulRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
 
     document.addEventListener('click', closeMenu);
 
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
+  const closeMenu = () => setShowMenu(false);
+
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    closeMenu();
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <>
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+    <div className="Nav">
+
+      <div className="profile_dropdown">
+
+
+      <button className="profile_button" onClick={openMenu}>
+        {/* <i className="fas fa-user-circle" /> */}
+
       </button>
-      <ul className={ulClassName} ref={ulRef}>
-        <li>{user.username}</li>
-        <li>{user.firstName} {user.lastName}</li>
-        <li>{user.email}</li>
-        <li>
-          <button onClick={logout}>Log Out</button>
-        </li>
-      </ul>
+      <ol className={ulClassName} ref={ulRef}>
+        {user ? (
+          <>
+          <div className="user-content">
+
+            <li>{user.username}</li>
+            <li>{user.firstName} {user.lastName}</li>
+            <li>{user.email}</li>
+            <li>
+              <button className="logoutbutton"onClick={logout}>Log Out</button>
+            </li>
+          </div>
+          </>
+        ) : (
+          <>
+            <OpenModalMenuItem id="modal"
+              itemText={<span className="item-text-log-in">Log In</span>}
+              onItemClick={closeMenu}
+              modalComponent={<LoginFormModal />}
+            />
+            <OpenModalMenuItem
+              itemText={<span className="item-text-sign-up">Sign Up</span>}
+              onItemClick={closeMenu}
+              modalComponent={<SignupFormModal />}
+            />
+          </>
+        )}
+        <button className="DemoUserButton"
+        onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))}>Demo User</button>
+      </ol>
+      </div>
+    </div>
     </>
   );
 }

@@ -5,22 +5,20 @@ import ProfileButton from './ProfileButton';
 import OpenModalButton from '../OpenModalButton';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import EditSpotModal from '../EditSpotModal';
+import AddSpotModal from '../AddSpotModal';
 // import * as sessionActions from '../../store/session';
 import './Navigation.css';
+import '../AddSpotModal/AddSpotModal.css'
+import logo from './AirbnbIcon.PNG'
 
 function Navigation({ isLoaded }){
   const sessionUser = useSelector(state => state.session.user);
-//   const dispatch = useDispatch();
-
-//   const logout = (e) => {
-//     e.preventDefault();
-//     dispatch(sessionActions.logout());
-//   };
 
   let sessionLinks;
   if (sessionUser) {
     sessionLinks = (
-      <li>
+      <li className="loginbutton">
         <ProfileButton user={sessionUser} />
         {/* <button onClick={logout}>Log Out</button> */}
       </li>
@@ -29,6 +27,7 @@ function Navigation({ isLoaded }){
     sessionLinks = (
       <li>
     <OpenModalButton
+    className="ModalButton"
           buttonText="Log In"
           modalComponent={<LoginFormModal />}
         />
@@ -36,17 +35,33 @@ function Navigation({ isLoaded }){
           buttonText="Sign Up"
           modalComponent={<SignupFormModal />}
         />
+
       </li>
     );
   }
 
   return (
-    <ul>
-      <li>
-        <NavLink exact to="/">Home</NavLink>
-      </li>
-      {isLoaded && sessionLinks}
-    </ul>
+    <div className="NavBar">
+    <NavLink className="home_button" exact to="/" >
+      <img src={logo} />
+      <p className="home_button_text">airvnv</p>
+        </NavLink>
+
+      {isLoaded && (
+        <li>
+            <OpenModalButton
+      buttonText={<span id="add-a-spot">Airvnv your home</span>}
+      modalComponent={<AddSpotModal id="addSpotModal" />}
+      />
+          <ProfileButton user={sessionUser} />
+        </li>
+      )}
+
+
+
+
+
+      </div>
   );
 }
 

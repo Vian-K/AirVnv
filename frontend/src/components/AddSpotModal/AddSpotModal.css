@@ -1,0 +1,119 @@
+.addspotModal {
+    font-family:'Lato', sans-serif;
+    border-radius: 20px;
+}
+
+
+
+#addSpotModal {
+    border-radius: 10px;
+}
+
+.addressinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.cityinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.stateinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.countryinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.nameinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.descriptioninput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.priceinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+.imageinput {
+    border: 1px solid gray;
+    border-radius: 10px;
+    height: 20px;
+    max-height: fit-content;
+    width: 40%;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.createButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 18px;
+    border: transparent;
+    background-color: white;
+    padding: 5px;
+}
+.createButton:hover {
+    text-decoration: underline;
+}
+
+.formtitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.addresslabel{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.label {
+    font-size: 16px;
+    margin-top: 10px;
+}

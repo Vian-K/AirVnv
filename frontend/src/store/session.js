@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const SET_USER = 'session/setUser';
 const REMOVE_USER = 'session/removeUser';
+const SET_DEMO_USER = 'session/setDemoUser';
 
 // create POJO action creator to get user
 export const setUser = (user) => ({
@@ -12,6 +13,11 @@ export const setUser = (user) => ({
 // create POJO action creator to delete user
 export const removeUser = () => ({
     type: REMOVE_USER,
+})
+
+export const setDemoUser = (user) => ({
+    type: SET_DEMO_USER,
+    payload: user
 })
 
 // thunk action creator
@@ -26,14 +32,15 @@ export const login = (user) => async (dispatch) => {
     })
 
     const data = await response.json();
-    dispatch(setUser(data));
+    console.log("user from login thunk", data)
+    dispatch(setUser(data.user));
     return response;
 }
 
 export const restoreUser = () => async dispatch => {
     const response = await csrfFetch('/api/session');
     const data = await response.json();
-    dispatch(setUser(data));
+    dispatch(setUser(data.user));
     return response;
   };
 
@@ -51,6 +58,7 @@ export const signup = (user) => async (dispatch) => {
       }),
     });
     const data = await response.json();
+    console.log("data-user:" , data.user)
     dispatch(setUser(data.user));
     return response;
   };
@@ -71,12 +79,15 @@ const sessionReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_USER:
             newState = Object.assign({}, state)
-            newState = action.payload
+            newState.user = action.payload
+
             return newState;
         case REMOVE_USER:
             newState = Object.assign({}, state)
             newState.user = null;
+
             return newState
+
         default:
             return state;
         }
