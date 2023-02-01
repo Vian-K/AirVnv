@@ -28,7 +28,7 @@ export const AddSpotModal = () => {
         setErrors([])
 try {
   const url = new URL(spotImage)
-if(url.protocol !== "http:" && url.protocal !== 'https:') {
+if(url.protocol !== "http:" && url.protocol !== 'https:') {
   setErrors(errors => [...errors, "Url is not a valid image Url"])
   return
 }

@@ -83,15 +83,15 @@ const ReviewForm = () => {
                 ) : null}
                 </form>
                 </div>
-
-                <h4 className="reviewdivider">{reviews.length} reviews</h4>
-
                 {errors.map((error, idx) => {
                       setTimeout(()=>{
                         setErrors(errors.filter((_, i) => i !== idx))
-                      },3000)
+                      },8000)
                       return <li className="errors" key={idx}>{error.message}</li>
                     })}
+
+                <h4 className="reviewdivider">{reviews.length} reviews</h4>
+
 
 
 

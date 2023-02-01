@@ -202,3 +202,11 @@ li {
 
 
 }
+
+
+.item-text-log-in {
+    cursor: pointer
+}
+.item-text-sign-up {
+    cursor: pointer
+}
