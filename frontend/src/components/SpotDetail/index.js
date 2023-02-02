@@ -10,11 +10,17 @@ import OpenModalButton from '../OpenModalButton';
 import ReviewForm from "../ReviewForm";
 import './SpotDetail.css';
 import '../Navigation/Navigation.css'
+
+
 const SpotDetail = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
     const history = useHistory()
     const spotDetail = useSelector(state => state.spot.singleSpot)
+    const reviewsData = useSelector(state => state.review.allReviews)
+    const reviews = Object.values(reviewsData)
+    console.log("reviewsData", reviewsData)
+    console.log("reviews", reviews)
 
     useEffect(() => {
         dispatch(getOneSpot(id))
@@ -23,12 +29,16 @@ const SpotDetail = () => {
     if(!spotDetail || !spotDetail.name) {
         return <p>Spot doesn't exist</p>
     }
-
+    let rating = 0;
+    reviews.forEach(rev => {
+        rating += parseInt(rev.stars)
+    })
+    const averageRating = reviews.length < 2 ? rating: (rating/reviews.length).toFixed(1)
     return(
         <div className="spotdetails">
             <h1 className="name">{spotDetail.name}</h1>
             <div className="ratingline">
-            <p className="avgRatinginDetails">{spotDetail.avgStarRating}</p>
+            <p className="avgRatinginDetails">{averageRating}</p>
             <p className="address">{spotDetail.address}, {spotDetail.city}, {spotDetail.state}, {spotDetail.country}</p>
             <div className="editButtoninDetails">
             <OpenModalButton
@@ -44,13 +54,10 @@ const SpotDetail = () => {
                 return <img id="detailsImage"src={image.url} alt={spotDetail.name} />
 
             })}
-            {/* <p className="priceinDetails">${spotDetail.price}/night</p> */}
+
             <p className="description">
                 {spotDetail.description}
                 <span className="priceinDetails">${spotDetail.price}/night</span></p>
-            {/* <p className="description">{spotDetail.description}</p> */}
-
-
 
             <ReviewForm />
         </div>

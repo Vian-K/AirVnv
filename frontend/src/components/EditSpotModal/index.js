@@ -55,7 +55,20 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          maxLength={25}
+          onKeyPress={(e) => {
+            if(e.target.value.length === 25) {
+               e.preventDefault()
+               if (!errors.includes("Address must be less than 25 characters")) {
+                setErrors([...errors, "Address must be less than 25 characters"]);
+              }
+            }
+          }
+        }
+          onChange={(e) => {
+            setAddress(e.target.value);
+            setErrors(errors.filter(error => error !== "Address must be less than 25 characters"));
+          }}
           required
         />
       </label>
@@ -64,7 +77,20 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={city}
-          onChange={(e) => setCity(e.target.value)}
+          maxLength={25}
+          onKeyPress={(e) => {
+            if(e.target.value.length === 25) {
+               e.preventDefault()
+               if (!errors.includes("City must be less than 25 characters")) {
+                setErrors([...errors, "City must be less than 25 characters"]);
+              }
+            }
+          }
+        }
+          onChange={(e) => {
+            setCity(e.target.value);
+            setErrors(errors.filter(error => error !== "City must be less than 25 characters"));
+          }}
           required
         />
       </label>
@@ -73,7 +99,20 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={state}
-          onChange={(e) => setState(e.target.value)}
+          maxLength={25}
+          onKeyPress={(e) => {
+            if(e.target.value.length === 25) {
+               e.preventDefault()
+               if (!errors.includes("State must be less than 25 characters")) {
+                setErrors([...errors, "State must be less than 25 characters"]);
+              }
+            }
+          }
+        }
+          onChange={(e) => {
+            setState(e.target.value);
+            setErrors(errors.filter(error => error !== "State must be less than 25 characters"));
+          }}
           required
         />
       </label>
@@ -82,7 +121,20 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={country}
-          onChange={(e) => setCountry(e.target.value)}
+          maxLength={25}
+          onKeyPress={(e) => {
+            if(e.target.value.length === 25) {
+               e.preventDefault()
+               if (!errors.includes("Country must be less than 25 characters")) {
+                setErrors([...errors, "Country must be less than 25 characters"]);
+              }
+            }
+          }
+        }
+          onChange={(e) => {
+            setCountry(e.target.value);
+            setErrors(errors.filter(error => error !== "Country must be less than 25 characters"));
+          }}
           required
         />
       </label>
@@ -91,7 +143,20 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          maxLength={25}
+          onKeyPress={(e) => {
+            if(e.target.value.length === 25) {
+               e.preventDefault()
+               if (!errors.includes("Name must be less than 25 characters")) {
+                setErrors([...errors, "Name must be less than 25 characters"]);
+              }
+            }
+          }
+        }
+          onChange={(e) => {
+            setName(e.target.value);
+            setErrors(errors.filter(error => error !== "Name must be less than 25 characters"));
+          }}
           required
         />
       </label>
@@ -100,7 +165,20 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          maxLength={100}
+          onKeyPress={(e) => {
+            if(e.target.value.length === 100) {
+               e.preventDefault()
+               if (!errors.includes("Description must be less than 100 characters")) {
+                setErrors([...errors, "Description must be less than 100 characters"]);
+              }
+            }
+          }
+        }
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setErrors(errors.filter(error => error !== "Description must be less than 100 characters"));
+          }}
           required
         />
       </label>
@@ -109,9 +187,19 @@ export const EditSpotModal = () => {
         <input className="input"
           type="text"
           value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          onChange={(e) => {
+            if(e.target.value < 0) {
+              setErrors([...errors, "Price must be greater than 0"])
+            } else {
+              setPrice(e.target.value)
+              setErrors(errors.filter(error => error !== "Price must be greater than 0"))
+            }
+          }
+        }
+
           required
         />
+
       </label>
 
 <button className="EditButton" type="Submit">Submit</button>

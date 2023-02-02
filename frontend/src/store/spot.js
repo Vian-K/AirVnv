@@ -33,9 +33,9 @@ export const addImages = (spots) => ({
     payload: spots
 })
 
-export const deleteSpots = (spots) => ({
+export const deleteSpots = (id) => ({
     type: DELETE_SPOTS,
-    payload: spots
+    id
 })
 
 export const getSpots = () => async (dispatch) => {
@@ -105,7 +105,8 @@ export const deleteSpot = (spots) => async (dispatch) => {
     })
     if(response.ok) {
         const data = await response.json()
-        dispatch(deleteSpots(data))
+        console.log(data)
+        dispatch(deleteSpots(spots.id))
         return response
     }
 }
@@ -132,7 +133,7 @@ export const spotsReducer = (state = initialState, action) => {
 
         case LOAD_ONE_SPOT:
             newState = {...state}
-
+            console.log("action.payload", action.payload)
             newState.singleSpot = action.payload
             return newState
 
@@ -153,13 +154,11 @@ export const spotsReducer = (state = initialState, action) => {
 
         case DELETE_SPOTS:
             newState={...state}
-            let singleSpotCopy = {}
-            let SpotsCopy = {}
-            newState.singleSpot = singleSpotCopy
-            newState.allSpots = SpotsCopy
 
-            delete singleSpotCopy.singleSpot
-            delete SpotsCopy.allSpots
+            let spotsCopy = {...newState.allSpots}
+            delete spotsCopy[action.id]
+
+            newState.allSpots = spotsCopy
 
             return newState
                 default:

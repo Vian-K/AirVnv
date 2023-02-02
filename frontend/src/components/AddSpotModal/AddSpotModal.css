@@ -1,7 +1,10 @@
 .addspotModal {
     font-family:'Lato', sans-serif;
-
+    /* border: 1px solid black; */
     margin: 25px;
+}
+#modal-content {
+    min-width: 565px;
 }
 
 .ul {

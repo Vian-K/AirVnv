@@ -5,6 +5,7 @@ import { useState } from "react";
 import * as spotActions from "../../store/spot"
 
 import "./AddSpotModal.css"
+import { useHistory } from "react-router-dom";
 
 
 export const AddSpotModal = () => {
@@ -20,7 +21,7 @@ export const AddSpotModal = () => {
 
     const { closeModal } = useModal()
     const dispatch = useDispatch()
-
+    const history = useHistory()
 
 
     const handleSubmit = (e) => {
@@ -40,6 +41,7 @@ if(url.protocol !== "http:" && url.protocol !== 'https:') {
         return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, spotImage, lat:15, lng:15}))
         .then(() => {
           closeModal()
+          history.push('/')
 
         })
         .catch(async (res) => {

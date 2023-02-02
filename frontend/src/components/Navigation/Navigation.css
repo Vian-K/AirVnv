@@ -17,26 +17,40 @@ li {
 
 .NavBar {
     background-color: rgb(255, 255, 255);
-    /* border-bottom: 1px solid rgb(224, 221, 221); */
+    box-sizing: border-box;
+    left: 0;
+    right: 0;
     top: 0;
     display: flex;
     position: fixed;
-    width: 85%;
+    width: 100%;
     height: 70px;
     z-index: 1000;
-    /* background-color: white; */
-    margin: -5px;
+
+    margin: 0 auto;
 
     align-items: center;
     justify-content: space-between;
     padding: 5px 0px;
+    max-width: 85%;
+    width: 100%;
+
 
 }
-@media (max-width: 600px) {
+
+/* @media (min-width: 992px) {
     .NavBar {
-        width:fit-content;
+      width: 85%;
     }
-}
+  } */
+
+  @media (max-width: 991px) {
+    .NavBar {
+      width: 100%;
+    }
+  }
+
+
 .profile_dropdown  {
 
     /* box-shadow: 2px 2px 15px 5px rgba(0,0,0,0.15); */
@@ -199,10 +213,7 @@ li {
     display: flex;
     background-color: white;
 
-
-
 }
-
 
 .item-text-log-in {
     cursor: pointer

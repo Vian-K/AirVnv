@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import * as reviewActions from "../../store/review"
 import { getReviews} from "../../store/review"
-
+import './ReviewForm.css'
 
 const ReviewForm = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-    const [review, setReviews ] = useState()
+    const [review, setReviews ] = useState("")
     const [stars, setStars] = useState("5")
     const [errors, setErrors] = useState([]);
     const [hasError, setHasError] = useState(false)
@@ -16,7 +16,7 @@ const ReviewForm = () => {
     const [errorVisible, setErrorVisible] = useState(false)
     const reviewsObj = useSelector(state => state.review.allReviews)
     const reviews = Object.values(reviewsObj)
-
+    // const errorsArr = Object.values(data.errors)
 
 
 
@@ -27,18 +27,30 @@ const ReviewForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         setErrors([])
+        if(!review) {
+            setErrors(errors => [...errors, "This field cannot be blank"])
+            return
+        }
+        if(errors.length > 0) {
+            return
+        }
+
         return dispatch(reviewActions.addReviews( {id,review, stars}))
         .then(() =>{
             dispatch(reviewActions.getReviews(id))
             setIsReviewOpen(false)
         })
         .catch(async (res) => {
-          const data = await res.json()
-          if(data && data.errors) setErrors(data.errors)
-          setHasError(true)
+            const data = await res.json();
+            if(data && data.errors) setErrors(data.errors);
+            setHasError(true);
 
-        })
-      }
+            setTimeout(() => {
+              setErrors([]);
+              setHasError(false);
+            }, 5000);
+          })
+        }
 
 
     return(
@@ -58,12 +70,13 @@ const ReviewForm = () => {
                      <div>
 
        <textarea className="textarea"
-                 type='textbox'
+                 type='input'
                  defaultValue="Add your review here"
                  onFocus={(e) => {
                     if (e.target.defaultValue === "Add your review here") {
                         setReviews("")
                     }
+
                 }}
                  value={review}
                  onChange={(e) => setReviews(e.target.value)}
@@ -83,6 +96,7 @@ const ReviewForm = () => {
                 ) : null}
                 </form>
                 </div>
+
                 {errors.map((error, idx) => {
                       setTimeout(()=>{
                         setErrors(errors.filter((_, i) => i !== idx))
@@ -93,12 +107,8 @@ const ReviewForm = () => {
                 <h4 className="reviewdivider">{reviews.length} reviews</h4>
 
 
-
-
-
-
-                {reviews.map(review => {
-
+                {reviews.reverse().map(review => {
+                    
                         return <ul className="reviewsList" >
                             <div className="reviewDataName">
                               {review.User ? review.User.firstName : ''}

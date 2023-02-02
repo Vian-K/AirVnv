@@ -6,6 +6,8 @@ import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import './Navigation.css';
 import './Capture.PNG'
+
+
 function ProfileButton({ user }) {
 console.log("user", user)
   const dispatch = useDispatch();
@@ -89,3 +91,6 @@ console.log("user", user)
 }
 
 export default ProfileButton;
+
+
+
