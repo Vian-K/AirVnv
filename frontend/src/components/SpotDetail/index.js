@@ -16,11 +16,11 @@ const SpotDetail = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
     const history = useHistory()
+    const user = useSelector(state => state.session.user)
     const spotDetail = useSelector(state => state.spot.singleSpot)
     const reviewsData = useSelector(state => state.review.allReviews)
     const reviews = Object.values(reviewsData)
-    console.log("reviewsData", reviewsData)
-    console.log("reviews", reviews)
+
 
     useEffect(() => {
         dispatch(getOneSpot(id))
@@ -34,21 +34,26 @@ const SpotDetail = () => {
         rating += parseInt(rev.stars)
     })
     const averageRating = reviews.length < 2 ? rating: (rating/reviews.length).toFixed(1)
+
     return(
         <div className="spotdetails">
             <h1 className="name">{spotDetail.name}</h1>
             <div className="ratingline">
             <p className="avgRatinginDetails">{averageRating}</p>
             <p className="address">{spotDetail.address}, {spotDetail.city}, {spotDetail.state}, {spotDetail.country}</p>
-            <div className="editButtoninDetails">
+            {user && user.id === spotDetail.ownerId ? (
+                <div className="editButtoninDetails">
             <OpenModalButton
+                    buttonText={<span id="editButtoninDetails">Edit</span>}
+                    modalComponent={<EditSpotModal />} />
+                    </div>) : null}
 
-                buttonText={<span id="editButtoninDetails">Edit</span>}
-                modalComponent={<EditSpotModal />} />
-</div>
-<button className="deletebuttoninDetails"
-             onClick={() => dispatch(spotActions.deleteSpot({id})).then(history.push("/"))}
-             >Delete Spot</button>
+        {user && user.id === spotDetail.ownerId ? (
+
+            <button className="deletebuttoninDetails"
+            onClick={() => dispatch(spotActions.deleteSpot({id})).then(history.push("/"))}
+            >Delete Spot</button>
+            ) : null}
             </div>
             {spotDetail.SpotImages.map(image => {
                 return <img id="detailsImage"src={image.url} alt={spotDetail.name} />

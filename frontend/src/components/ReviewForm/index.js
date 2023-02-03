@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import * as reviewActions from "../../store/review"
 import { getReviews} from "../../store/review"
+import SpotDetail from "../SpotDetail";
 import './ReviewForm.css'
 
 const ReviewForm = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
+    const user = useSelector(state => state.session.user)
     const [review, setReviews ] = useState("")
     const [stars, setStars] = useState("5")
     const [errors, setErrors] = useState([]);
@@ -52,6 +54,7 @@ const ReviewForm = () => {
           })
         }
 
+        console.log("REVIEWS", reviews)
 
     return(
         <div className="reviewscontainer">
@@ -69,8 +72,9 @@ const ReviewForm = () => {
                  {isReviewOpen ? (
                      <div>
 
+
        <textarea className="textarea"
-                 type='input'
+                 type='textbox'
                  defaultValue="Add your review here"
                  onFocus={(e) => {
                     if (e.target.defaultValue === "Add your review here") {
@@ -79,9 +83,23 @@ const ReviewForm = () => {
 
                 }}
                  value={review}
-                 onChange={(e) => setReviews(e.target.value)}
+                 maxLength={255}
+                 onKeyPress={(e) => {
+                        if(e.target.value.length >= 255) {
+                            e.preventDefault()
+                            if(!errors.includes("Review must be less than 255 characters"))
+                            setErrors([...errors, "Review must be less than 255 characters" ])
+                        }
+                        }
+                }
+                onChange={(e) => {
+                    setReviews(e.target.value)
+                    setErrors(errors.filter(error => error !== "Review must be less than 255 characters"))
+                }}
+                required
                  >
                  </textarea>
+
                  <select className="stars" value={stars} onChange={(e) => setStars(e.target.value)}>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -108,7 +126,7 @@ const ReviewForm = () => {
 
 
                 {reviews.reverse().map(review => {
-                    
+
                         return <ul className="reviewsList" >
                             <div className="reviewDataName">
                               {review.User ? review.User.firstName : ''}
@@ -120,16 +138,19 @@ const ReviewForm = () => {
                              {review.stars}
                             </div>
 
-                            <button className="deleteButtonInReviews" type="Delete"
-
-                        onClick={() => dispatch(reviewActions.deleteReviews(review))
-                            .then(() =>{
-                                dispatch(reviewActions.getReviews(id))
-                                setIsReviewOpen(false)
-                            } )}
-                            >Delete Review</button>
-
+                            {user && user.id === review.userId ? (
+                            <button className="deleteButtonInReviews"
+                                type="Delete"
+                                onClick={() =>
+                                    dispatch(reviewActions.deleteReviews(review))
+                                    .then(() => {
+                                    dispatch(reviewActions.getReviews(id));
+                                    setIsReviewOpen(false);
+                            })
+                    }
+                >Delete Review</button>) : null}
                             </ul>
+
 
                     })}
                 </div>
