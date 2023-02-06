@@ -40,8 +40,12 @@ if(url.protocol !== "http:" && url.protocol !== 'https:') {
 if(price >= 25000 && !errors.includes("This price is above the maximum limit")) {
   // setErrors(errors.filter(error => error !== "This price is above the maximum"))
   setErrors([...errors, "This price is above the maximum limit"])
+  setTimeout(() => {
+    setErrors([]);
+  }, 3000);
   return
 }
+
         return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, spotImage, lat:15, lng:15}))
         .then(() => {
           closeModal()
@@ -62,7 +66,9 @@ if(price >= 25000 && !errors.includes("This price is above the maximum limit")) 
         <form className="addspotform" onSubmit={handleSubmit}>
             <h1 className="formtitle">Add a Spot</h1>
             <ul className="ul">
+
         {errors.map((error, idx) => <li key={idx}>{error}</li>)}
+
       </ul>
       <label className="label">
         Address
