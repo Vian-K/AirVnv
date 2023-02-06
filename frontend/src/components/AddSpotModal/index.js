@@ -37,7 +37,11 @@ if(url.protocol !== "http:" && url.protocol !== 'https:') {
   setErrors(errors => [...errors, "Url is not a valid image Url"])
   return
 }
-
+if(price >= 25000 && !errors.includes("This price is above the maximum limit")) {
+  // setErrors(errors.filter(error => error !== "This price is above the maximum"))
+  setErrors([...errors, "This price is above the maximum limit"])
+  return
+}
         return dispatch(spotActions.addSpot({address, city, state, country, name, description, price, spotImage, lat:15, lng:15}))
         .then(() => {
           closeModal()
@@ -199,14 +203,16 @@ if(url.protocol !== "http:" && url.protocol !== 'https:') {
           value={price}
 
           onChange={(e) => {
-            if(e.target.value < 0) {
-              setErrors([...errors, "Price must be greater than 0"])
-            } else {
-              setPrice(e.target.value)
-              setErrors(errors.filter(error => error !== "Price must be greater than 0"))
+            setPrice(e.target.value);
+            if (e.target.value.length === 0) {
+              setErrors(errors.filter(error => error !== "Price must be greater than 0"));
+            } else if (e.target.value <= 0 && !errors.includes("Price must be greater than 0")) {
+              setErrors([...errors, "Price must be greater than 0"]);
+            } else if (e.target.value > 0) {
+              setErrors(errors.filter(error => error !== "Price must be greater than 0"));
             }
-          }
-        }
+
+          }}
 
           required
         />

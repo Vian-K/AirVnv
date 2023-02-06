@@ -3,6 +3,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    padding: 5px;
 }
 
 .ul {
@@ -35,7 +36,7 @@
 
 .loginspotmodal {
     font-family:'Lato', sans-serif;
- 
+    max-height: 350px;
 }
 
 .loginButton {
@@ -64,9 +65,8 @@
     font-size: 16px;
 }
 
+#modal-content {
+    height: fit-content;
+}
 
-/* @media (min-width: 992px) {
-    .loginspotmodal{
-      width: 100%;
-    }
-  } */
+

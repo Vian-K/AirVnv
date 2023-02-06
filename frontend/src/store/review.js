@@ -84,7 +84,6 @@ export const reviewsReducer = (state = initialState, action) => {
             delete allReviewsCopy.allReviews
             newState.allReviews = allReviewsCopy
 
-
             return newState
 
         default:

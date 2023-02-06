@@ -47,12 +47,14 @@ function Navigation({ isLoaded }){
       <p className="home_button_text">airvnv</p>
         </NavLink>
 
-      {isLoaded && (
-        <li>
-            <OpenModalButton
-      buttonText={<span id="add-a-spot">Airvnv your home</span>}
-      modalComponent={<AddSpotModal id="addSpotModal" />}
-      />
+        {isLoaded &&  (
+          <li>
+          {sessionUser ? (
+          <OpenModalButton
+          buttonText={<span id="add-a-spot">Airvnv your home</span>}
+          modalComponent={<AddSpotModal id="addSpotModal" />}
+          />
+          ) : null}
           <ProfileButton user={sessionUser} />
         </li>
       )}

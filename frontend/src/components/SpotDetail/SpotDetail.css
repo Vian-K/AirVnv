@@ -3,7 +3,7 @@ h1 {
 }
 
 .spotdetails {
-    display: flex;
+    display: block;
     flex-direction: column;
     justify-content: center;
     align-items: center;

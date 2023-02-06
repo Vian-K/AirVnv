@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
@@ -9,10 +9,11 @@ import './Capture.PNG'
 
 
 function ProfileButton({ user }) {
-console.log("user", user)
+
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const sessionUser = useSelector(state => state.session.user)
 
   const openMenu = () => {
     if (showMenu) return;
@@ -46,19 +47,14 @@ console.log("user", user)
   return (
     <>
     <div className="Nav">
-
-      <div className="profile_dropdown">
-
-
+    <div className="profile_dropdown">
       <button className="profile_button" onClick={openMenu}>
         {/* <i className="fas fa-user-circle" /> */}
-
       </button>
       <ol className={ulClassName} ref={ulRef}>
         {user ? (
           <>
           <div className="user-content">
-
             <li>{user.username}</li>
             <li>{user.firstName} {user.lastName}</li>
             <li>{user.email}</li>
@@ -81,8 +77,11 @@ console.log("user", user)
             />
           </>
         )}
-        <button className="DemoUserButton"
-        onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))}>Demo User</button>
+        {!sessionUser ? (
+
+          <button className="DemoUserButton"
+          onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))}>Demo User</button>
+          ) : null}
       </ol>
       </div>
     </div>
@@ -91,6 +90,3 @@ console.log("user", user)
 }
 
 export default ProfileButton;
-
-
-
