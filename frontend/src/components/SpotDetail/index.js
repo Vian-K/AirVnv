@@ -70,4 +70,4 @@ const SpotDetail = () => {
 }
 
 
-export default SpotDetail
+export default SpotDetail;

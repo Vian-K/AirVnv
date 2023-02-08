@@ -6,6 +6,9 @@ import SpotDetail from './components/SpotDetail'
 import SignupFormPage from "./components/SignupFormModal";
 import * as sessionActions from "./store/session";
 import Navigation from "./components/Navigation";
+import Reviews from "./components/Reviews";
+import UserReviews from "./components/Reviews";
+import * as reviewActions from "./components/Reviews"
 
 function App() {
   const dispatch = useDispatch();
@@ -25,6 +28,12 @@ function App() {
         <Route path='/spots/:id'>
         <SpotDetail />
         </Route>
+
+        {/* <Route path='/reviews/current' component={UserReviews} >
+          <UserReviews />
+
+
+           </Route> */}
         </Switch>
       )}
     </>

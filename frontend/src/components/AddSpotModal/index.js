@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 
 
 export const AddSpotModal = () => {
+  const user = useSelector(state => state.session.user)
   const [address, setAddress ] = useState('')
   const [city, setCity ] = useState('')
   const [state, setState ] = useState('')
@@ -237,6 +238,17 @@ if(price >= 25000 && !errors.includes("This price is above the maximum limit")) 
 
       <button className="createButton" type="Create">Create</button>
         </form>
+        {user && user.id === 1 ? (
+
+<button className="demoaddButton" type="Create"
+onClick={() => dispatch(spotActions.addSpot({address:"test", city:"test", state:"test", country:"test", name:"test", description:"test", price:"123", spotImage:"https://a0.muscache.com/im/pictures/3721c4eb-3da9-4526-8a19-7307de85fa1a.jpg?im_w=1200", lat:15, lng:15}))
+.then(() => {
+  closeModal()
+  history.push('/')
+
+})}
+>Demo Add Spot</button>
+) : null}
         </div>
     )
 }

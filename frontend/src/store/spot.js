@@ -119,6 +119,7 @@ export const spotsReducer = (state = initialState, action) => {
         case LOAD_SPOTS:
         newState = {...state}
         let allSpotsCopy = {}
+        // console.log("LOADSPOTREDUCER", action.payload.Spots)
         action.payload.Spots.forEach(spot => {
             allSpotsCopy[spot.id] = spot
         })
@@ -133,7 +134,6 @@ export const spotsReducer = (state = initialState, action) => {
 
         case LOAD_ONE_SPOT:
             newState = {...state}
-            
             newState.singleSpot = action.payload
             return newState
 
@@ -157,6 +157,7 @@ export const spotsReducer = (state = initialState, action) => {
             let spotsCopy = {...newState.allSpots}
             delete spotsCopy[action.id]
             newState.allSpots = spotsCopy
+            newState.singleSpot = {}
 
             return newState
                 default:

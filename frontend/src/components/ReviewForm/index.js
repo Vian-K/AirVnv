@@ -9,14 +9,14 @@ import './ReviewForm.css'
 const ReviewForm = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-    const user = useSelector(state => state.session.user)
     const [review, setReviews ] = useState("")
     const [stars, setStars] = useState("5")
     const [errors, setErrors] = useState([]);
     const [hasError, setHasError] = useState(false)
     const [isReviewOpen, setIsReviewOpen] = useState(false);
-    const [errorVisible, setErrorVisible] = useState(false)
+    // const [errorVisible, setErrorVisible] = useState(false)
     const reviewsObj = useSelector(state => state.review.allReviews)
+    const user = useSelector(state => state.session.user)
     const reviews = Object.values(reviewsObj)
     // const errorsArr = Object.values(data.errors)
 
@@ -54,7 +54,7 @@ const ReviewForm = () => {
           })
         }
 
-        console.log("REVIEWS", reviews)
+
 
     return(
         <div className="reviewscontainer">

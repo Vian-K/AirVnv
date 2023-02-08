@@ -2,6 +2,7 @@
 import { csrfFetch } from "./csrf";
 
 const LOAD_REVIEW = 'reviews/loadReview'
+const LOAD_USER_REVIEW = 'reviews/loadUserReview'
 const ADD_REVIEW = 'reviews/addReview'
 // const ADD_IMAGE = 'review/addImage'
 // const EDIT_REVIEW = 'spots/editSpots'
@@ -10,6 +11,10 @@ const DELETE_REVIEW = 'review/deleteReview'
 
 export const loadReviews = (reviews) => ({
     type: LOAD_REVIEW,
+    payload: reviews
+})
+export const loadUserReview = (reviews) => ({
+    type: LOAD_USER_REVIEW,
     payload: reviews
 })
 export const addReview = (reviews) => ({
@@ -29,6 +34,15 @@ export const getReviews = (spot) => async (dispatch) => {
     dispatch(loadReviews(data))
     return data
 }
+
+export const getUserReviews = (user) => async (dispatch) => {
+    const response = await csrfFetch(`/api/reviews/current`)
+    const data = await response.json()
+    console.log(data)
+    dispatch(loadUserReview(data.Review))
+    return data
+}
+
 
 export const addReviews = (spot) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spot.id}/reviews`, {
@@ -56,7 +70,7 @@ export const deleteReviews = (review) => async (dispatch) => {
         return response
     }
 }
-const initialState = { allReviews: {} /*, singleReview: {}*/}
+const initialState = { allReviews: {}, userSpecificReviews: {} /*, singleReview: {}*/}
 
 export const reviewsReducer = (state = initialState, action) => {
     let newState;
@@ -71,6 +85,14 @@ export const reviewsReducer = (state = initialState, action) => {
         newState.allReviews = reviewsCopy
 
             return newState
+         case LOAD_USER_REVIEW:
+            newState = {...state}
+            const userSpecificReviews ={}
+            action.payload.forEach(review => {
+                userSpecificReviews[review.id] = review
+            })
+            newState.allReviews = action.payload
+            return {...state, userSpecificReviews}
         case ADD_REVIEW:
             newState = {...state}
             let newStateCopy = {...newState.allReviews}
@@ -80,10 +102,8 @@ export const reviewsReducer = (state = initialState, action) => {
         case DELETE_REVIEW:
             newState = {...state}
             let allReviewsCopy= {...state}
-
             delete allReviewsCopy.allReviews
             newState.allReviews = allReviewsCopy
-
             return newState
 
         default:
@@ -91,3 +111,4 @@ export const reviewsReducer = (state = initialState, action) => {
 
     }
 }
+export default reviewsReducer

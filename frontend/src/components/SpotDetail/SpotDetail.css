@@ -33,7 +33,7 @@ h1 {
 
     object-fit: cover;
     min-width: 100%;
-    max-height: auto;
+    height: 600px;
     border-radius: 25px;
 }
 

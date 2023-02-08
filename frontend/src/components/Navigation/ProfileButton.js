@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
+import { NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+
 import './Navigation.css';
 import './Capture.PNG'
 
@@ -44,6 +46,7 @@ function ProfileButton({ user }) {
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
+
   return (
     <>
     <div className="Nav">
@@ -81,6 +84,12 @@ function ProfileButton({ user }) {
 
           <button className="DemoUserButton"
           onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))}>Demo User</button>
+          ) : null}
+
+        {sessionUser ? (
+           <NavLink className="user-reviews-button" exact to="/reviews/current">
+              <p className="user-reviews-button-text">My Reviews</p>
+         </NavLink>
           ) : null}
       </ol>
       </div>
