@@ -4,7 +4,7 @@ import { csrfFetch } from "./csrf";
 const LOAD_REVIEW = 'reviews/loadReview'
 const LOAD_USER_REVIEW = 'reviews/loadUserReview'
 const ADD_REVIEW = 'reviews/addReview'
-// const ADD_IMAGE = 'review/addImage'
+
 // const EDIT_REVIEW = 'spots/editSpots'
 const DELETE_REVIEW = 'review/deleteReview'
 
@@ -28,18 +28,18 @@ export const deleteReview = (reviews) => ({
 })
 
 export const getReviews = (spot) => async (dispatch) => {
-
     const response = await csrfFetch(`/api/spots/${spot}/reviews`)
     const data = await response.json()
     dispatch(loadReviews(data))
     return data
 }
 
-export const getUserReviews = (user) => async (dispatch) => {
+export const getUserReviews = () => async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/current`)
+    console.log('RESPONSE', response)
     const data = await response.json()
-    console.log(data)
-    dispatch(loadUserReview(data.Review))
+    console.log("DATA", data)
+    dispatch(loadUserReview(data))
     return data
 }
 
@@ -66,11 +66,11 @@ export const deleteReviews = (review) => async (dispatch) => {
     if(response.ok) {
         const data = await response.json()
         console.log("response data", data)
-        dispatch(deleteReviews(review))
+        dispatch(deleteReview(review))
         return response
     }
 }
-const initialState = { allReviews: {}, userSpecificReviews: {} /*, singleReview: {}*/}
+const initialState = { allReviews: {}, userSpecificReviews: {}}
 
 export const reviewsReducer = (state = initialState, action) => {
     let newState;
@@ -86,6 +86,7 @@ export const reviewsReducer = (state = initialState, action) => {
 
             return newState
          case LOAD_USER_REVIEW:
+            console.log("ACTION.PAYLOAD", action.payload)
             newState = {...state}
             const userSpecificReviews ={}
             action.payload.forEach(review => {

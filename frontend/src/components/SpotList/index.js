@@ -17,6 +17,10 @@ useEffect(() => {
         <div className="maincontainer">
         <ul>
             {spots.map(({id, name, previewImage, city, state, price, avgRating}) => {
+                let rating = parseFloat(avgRating)
+                if (rating > 0) {
+                    rating = rating.toFixed(1)
+                }
                 return (
                 <li className="images">
                     <NavLink to={`spots/${id}`}>
@@ -24,7 +28,7 @@ useEffect(() => {
                     </NavLink>
                     <p className="citystate">{city}, {state}</p>
                     <p className="avgRating">
-                        {avgRating}</p>
+                        {rating}</p>
                     <p className="price">${price}/night</p>
                 </li>
                 )

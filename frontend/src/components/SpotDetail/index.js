@@ -10,6 +10,7 @@ import OpenModalButton from '../OpenModalButton';
 import ReviewForm from "../ReviewForm";
 import './SpotDetail.css';
 import '../Navigation/Navigation.css'
+import Bookings from "../Bookings";
 
 
 const SpotDetail = () => {
@@ -65,6 +66,7 @@ const SpotDetail = () => {
                 <span className="priceinDetails">${spotDetail.price}/night</span></p>
 
             <ReviewForm />
+            <Bookings />
         </div>
     )
 }

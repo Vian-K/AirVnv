@@ -29,11 +29,10 @@ function App() {
         <SpotDetail />
         </Route>
 
-        {/* <Route path='/reviews/current' component={UserReviews} >
+        <Route path='/reviews/current' >
           <UserReviews />
 
-
-           </Route> */}
+           </Route>
         </Switch>
       )}
     </>
