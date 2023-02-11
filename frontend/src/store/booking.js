@@ -31,10 +31,10 @@ export const getBookings = (id) => async (dispatch) => {
     return data
 }
 
-export const addBookings = (spot) => async (dispatch) => {
-    const response = await csrfFetch(`/api/spots/${spot.id}/bookings`, {
+export const addBookings = (booking) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots/${booking.id}/bookings`, {
         method: 'POST',
-        body: JSON.stringify(spot)
+        body: JSON.stringify(booking)
     })
     if(response.ok) {
         const data = await response.json()
@@ -80,6 +80,12 @@ export const bookingsReducer = (state = initialState, action) => {
                 allBookingsCopy[booking.id] = booking
             })
             newState.allBookings = allBookingsCopy
+            return newState;
+        case ADD_BOOKINGS:
+            newState = {...state}
+            let newStateCopy = {...newState.allBookings}
+            newStateCopy[action.payload.id] = action.payload
+            newState.allBookings = newStateCopy
             return newState;
         default:
             return state;
