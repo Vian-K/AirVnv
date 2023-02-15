@@ -37,6 +37,7 @@ router.delete('/', (_req, res) => {
 
 router.get('/', restoreUser, (req, res) => {
         const { user } = req;
+        // console.log("BACKENDROUTE USER", user)
         if (user) {
           return res.json({
             user: user.toSafeObject()

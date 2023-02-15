@@ -61,6 +61,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
 // BODY MISSING previewImage FOR SPOTS
 router.get('/current', requireAuth, async (req, res, next) => {
     const user = req.user
+    console.log("USER", user)
     const spots = await Spot.findAll({
         include: [
             {
@@ -135,7 +136,7 @@ router.put('/:reviewId', requireAuth,  async (req,res, next) => {
     const { reviewId } = req.params
     const { review, stars } = req.body
     const reviews = await Review.findByPk(reviewId)
-   
+
     if(!reviews) {
         const err = new Error('Review does not exist')
         err.title = 'Review couldn\'t be found'
