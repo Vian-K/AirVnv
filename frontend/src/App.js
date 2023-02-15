@@ -9,6 +9,7 @@ import Navigation from "./components/Navigation";
 import Reviews from "./components/Reviews";
 import UserReviews from "./components/Reviews";
 import * as reviewActions from "./components/Reviews"
+import UserBookings from "./components/UserBookings";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,7 +24,8 @@ function App() {
       {isLoaded && (
         <Switch>
           <Route  exact path='/' >
-            <SpotList /></Route>
+            <SpotList />
+            </Route>
 
         <Route path='/spots/:id'>
         <SpotDetail />
@@ -31,8 +33,11 @@ function App() {
 
         <Route path='/reviews/current' >
           <UserReviews />
-
            </Route>
+
+        <Route path='/bookings/current' >
+          <UserBookings />
+        </Route>
         </Switch>
       )}
     </>

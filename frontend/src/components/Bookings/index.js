@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBookings, addBookings } from "../../store/booking";
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
+import './bookings.css'
 
 
 const Bookings = () => {
@@ -16,7 +17,7 @@ const Bookings = () => {
     const [startDate, setStartDate] = useState()
     const [endDate, setEndDate] = useState()
     const [blockedDates, setBlockedDates] = useState([])
-    const [submit, setSubmit] = useState(false)
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
     // const spotDetail = useSelector(state => state.spot.singleSpot)
 
 
@@ -56,36 +57,39 @@ const Bookings = () => {
     let day = date.getDate().toString().padStart(2, "0")
     return `${year}-${month}-${day}`
    }
-   console.log("startDate", startDate)
-   console.log("endDate", endDate)
-    return (
-        <div className="main-bookings">
-            <div>
-
+  
+   return (
+    <div className="main-bookings">
+      <div>
+        {!isBookingOpen ? (
+          <button className="open-calendar" onClick={() => setIsBookingOpen(true)}>Open Calendar</button>
+        ) : (
+          <>
             <Calendar
-            onChange={(date) => bookingInputs(date[0], date[1]) }
-            selectRange
-            tileDisabled={({date}) => {
+              onChange={(date) => bookingInputs(date[0], date[1])}
+              selectRange
+              tileDisabled={({ date }) => {
                 const formattedDate = formatDate(date);
                 return bookingsArr.some(booking => {
-                    return (
-                        (formattedDate >= formatDate(new Date(booking.startDate)) &&
-                        formattedDate <= formatDate(new Date(booking.endDate)))
-                    );
+                  return (
+                    formattedDate >= formatDate(new Date(booking.startDate)) &&
+                    formattedDate <= formatDate(new Date(booking.endDate))
+                  );
                 });
-            }}
+              }}
             />
-            <button className="bookingsubmit"
-            onClick={() => dispatch(addBookings({id, startDate, endDate}))  }
-            >Book</button>
-
-
-            </div>
-
-
-
-        </div>
-    );
+            <button
+              className="bookingsubmit"
+              onClick={() => dispatch(addBookings({ id, startDate, endDate }))}
+            >
+              Reserve
+            </button>
+            <button className="cancelButton" onClick={() => setIsBookingOpen(false)}>Cancel</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default Bookings;

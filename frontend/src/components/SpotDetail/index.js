@@ -52,7 +52,7 @@ const SpotDetail = () => {
         {user && user.id === spotDetail.ownerId ? (
 
             <button className="deletebuttoninDetails"
-            onClick={() => dispatch(spotActions.deleteSpot({id})).then(history.push("/"))}
+            onClick={() => dispatch(spotActions.deleteSpot({id})).then(() => history.push("/"))}
             >Delete Spot</button>
             ) : null}
             </div>

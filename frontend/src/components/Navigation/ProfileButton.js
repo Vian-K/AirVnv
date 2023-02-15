@@ -14,13 +14,21 @@ function ProfileButton({ user }) {
 
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const [showAccountMenu, setShowAccountMenu] = useState(false)
+  const [menuTimeout, setMenuTimeout] = useState(null)
   const ulRef = useRef();
+  const accountulRef = useRef();
   const sessionUser = useSelector(state => state.session.user)
 
   const openMenu = () => {
     if (showMenu) return;
     setShowMenu(true);
   };
+
+  const openAccountMenu = () => {
+    if(showAccountMenu) return;
+    setShowAccountMenu(true);
+  }
 
   useEffect(() => {
     if (!showMenu) return;
@@ -36,6 +44,21 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
+useEffect(() => {
+  if(!showAccountMenu) return;
+
+  const closeMenu = (e) => {
+    if(!accountulRef.current.contains(e.target)) {
+      setShowAccountMenu(false)
+    }
+  }
+  document.addEventListener('click', closeMenu);
+
+  return () => document.removeEventListener("click", closeMenu);
+}, [showAccountMenu]);
+
+
+
   const closeMenu = () => setShowMenu(false);
 
   const logout = (e) => {
@@ -45,6 +68,7 @@ function ProfileButton({ user }) {
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+  const accountUlClassName = "account-dropdown" + (showAccountMenu ? "" : " hidden");
 
 
   return (
@@ -86,11 +110,31 @@ function ProfileButton({ user }) {
           onClick={() => dispatch(sessionActions.login({credential: "Demo-lition", password: "password"}))}>Demo User</button>
           ) : null}
 
-        {sessionUser ? (
-           <NavLink className="user-reviews-button" exact to="/reviews/current">
-              <p className="user-reviews-button-text">My Reviews</p>
+{sessionUser && (
+  <li className="nested-dropdown">
+   <button className="account-button" onClick={() => setShowAccountMenu(true)} onMouseEnter={() => setShowAccountMenu(true)} onMouseLeave={() => setTimeout(() => setShowAccountMenu(false), 2000) }>
+    My Account
+   </button>
+  {showAccountMenu ? (
+    <ol className='account-menu' onMouseEnter={() => clearTimeout(menuTimeout)}>
+      <NavLink className="user-reviews-button" exact to="/reviews/current">
+              <span className="user-reviews-button-text">My Reviews</span>
          </NavLink>
-          ) : null}
+      <NavLink className="user-bookings-button" exact to="/bookings/current">
+              <span className="user-bookings-button-text">My Bookings</span>
+         </NavLink>
+
+    </ol>
+
+  ): null}
+
+
+
+
+
+  </li>
+)}
+
       </ol>
       </div>
     </div>

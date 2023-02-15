@@ -36,9 +36,7 @@ export const getReviews = (spot) => async (dispatch) => {
 
 export const getUserReviews = () => async (dispatch) => {
     const response = await csrfFetch(`/api/reviews/current`)
-    console.log('RESPONSE', response)
     const data = await response.json()
-    console.log("DATA", data)
     dispatch(loadUserReview(data))
     return data
 }
@@ -57,7 +55,7 @@ export const addReviews = (spot) => async (dispatch) => {
 }
 
 export const deleteReviews = (review) => async (dispatch) => {
-        console.log("deleteReview", review)
+        // console.log("deleteReview", review)
     const response = await csrfFetch(`/api/reviews/${review.id}`, {
         method: 'DELETE',
         body: JSON.stringify(review)
@@ -86,14 +84,13 @@ export const reviewsReducer = (state = initialState, action) => {
 
             return newState
          case LOAD_USER_REVIEW:
-            console.log("ACTION.PAYLOAD", action.payload)
             newState = {...state}
-            const userSpecificReviews ={}
-            action.payload.forEach(review => {
-                userSpecificReviews[review.id] = review
+            let userSpecificReviewsCopy ={}
+            action.payload.Reviews.forEach(review => {
+                userSpecificReviewsCopy[review.id] = review
             })
-            newState.allReviews = action.payload
-            return {...state, userSpecificReviews}
+            newState.userSpecificReviews = userSpecificReviewsCopy
+            return newState
         case ADD_REVIEW:
             newState = {...state}
             let newStateCopy = {...newState.allReviews}
@@ -101,10 +98,10 @@ export const reviewsReducer = (state = initialState, action) => {
             newState.allReviews = newStateCopy
             return newState
         case DELETE_REVIEW:
-            newState = {...state}
-            let allReviewsCopy= {...state}
-            delete allReviewsCopy.allReviews
-            newState.allReviews = allReviewsCopy
+           newState= {...state}
+           let reviewCopy = {...newState.userSpecificReviews}
+           delete reviewCopy[action.payload.id]
+           newState.userSpecificReviews = reviewCopy
             return newState
 
         default:

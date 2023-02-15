@@ -1,0 +1,20 @@
+.main-bookings {
+
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.bookingsubmit {
+    border: 2px solid gray;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    padding:8px;
+    margin: 5px;
+    background-color: white;
+    float:right;
+}
+.bookingsubmit:hover {
+    box-shadow: 1px 3px 10px 2px rgba(0,0,0,0.25);
+}

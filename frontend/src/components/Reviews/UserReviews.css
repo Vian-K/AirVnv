@@ -1,0 +1,34 @@
+.user-reviews {
+    /* border: 1px solid black; */
+   display: grid;
+
+}
+
+.user-review-data {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    height: 100%;
+    gap: 3px;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+
+}
+
+.user-reviews-data-container {
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    font-family: 'Lato', sans-serif;
+}
+
+.deleteButtonInReviews {
+    display: flex;
+}
+
+.reviews-header {
+    font-family: 'Lato', sans-serif;
+    text-decoration: underline;
+}
