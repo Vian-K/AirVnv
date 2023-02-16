@@ -7,6 +7,12 @@ const UserBookings = () => {
     const bookings = useSelector(state => state.booking.userSpecificBookings)
     const bookingsArr = Object.values(bookings)
 
+    const myStyle = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: 'Lato'
+    }
 
 useEffect(() => {
     dispatch(getUserBookings())
@@ -14,9 +20,10 @@ useEffect(() => {
 
     return(
         <div className="user-bookings">
-        <h1>My Bookings</h1>
 
-        {bookingsArr.map(booking => {
+        <h1 className="coming"style={myStyle}>This feature is coming soon.</h1>
+
+        {/* {bookingsArr.map(booking => {
             console.log("BOOKING", booking)
             return <div className="user-bookings-data">
                 <p>{booking.Spot.name}</p>
@@ -29,6 +36,7 @@ useEffect(() => {
 
             </div>
         })}
+         */}
         </div>
     )
 }

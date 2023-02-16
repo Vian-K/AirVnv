@@ -65,7 +65,7 @@ const SpotDetail = () => {
                 {spotDetail.description}
                 <span className="priceinDetails">${spotDetail.price}/night</span></p>
 
-            <Bookings />
+            {/* <Bookings /> */}
             <ReviewForm />
         </div>
     )
