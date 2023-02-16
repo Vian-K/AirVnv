@@ -17,7 +17,7 @@ useEffect(() => {
         <div className="maincontainer">
         <ul>
             {spots.map(({id, name, previewImage, city, state, price, avgRating}) => {
-                let rating = parseFloat(avgRating)
+                let rating = parseFloat(avgRating) || 0
                 if (rating > 0) {
                     rating = rating.toFixed(1)
                 }

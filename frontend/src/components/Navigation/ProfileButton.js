@@ -123,18 +123,10 @@ useEffect(() => {
       <NavLink className="user-bookings-button" exact to="/bookings/current">
               <span className="user-bookings-button-text">My Bookings</span>
          </NavLink>
-
     </ol>
-
   ): null}
-
-
-
-
-
   </li>
 )}
-
       </ol>
       </div>
     </div>

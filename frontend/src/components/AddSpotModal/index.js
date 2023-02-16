@@ -208,19 +208,29 @@ if(price >= 25000 && !errors.includes("This price is above the maximum limit")) 
         <input className="priceinput"
           type="text"
           value={price}
-
+          maxLength={10}
           onChange={(e) => {
+
             setPrice(e.target.value);
+
+            let newErrors = [];
+
             if (e.target.value.length === 0) {
-              setErrors(errors.filter(error => error !== "Price must be greater than 0"));
-            } else if (e.target.value <= 0 && !errors.includes("Price must be greater than 0")) {
-              setErrors([...errors, "Price must be greater than 0"]);
-            } else if (e.target.value > 0) {
-              setErrors(errors.filter(error => error !== "Price must be greater than 0"));
+              // If the input value is empty, remove all errors.
+              setErrors([]);
+              return;
             }
 
-          }}
+            if (e.target.value <= 0) {
+              newErrors.push("Price must be greater than 0");
+            }
 
+            if (isNaN(e.target.value)) {
+              newErrors.push("Price must be a number");
+            }
+
+            setErrors(newErrors);
+          }}
           required
         />
       </label>
