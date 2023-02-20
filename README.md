@@ -18,4 +18,6 @@ In order to launch the site locally, you will need to do an npm install on both 
 frontend directories. After successfully install of the package.json, you can launch both
 servers with npm install each from their own directory. (Tip: Use two different terminals)
 
-In the near future, I will add the capability of adding images to reviews and adding bookings to spots.
+In the near future, I will increase the capability of reviews and also add the ability to add and modify bookings.
+
+![Home Page](assets/home-screen.PNG)
