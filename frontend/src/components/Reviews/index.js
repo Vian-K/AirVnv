@@ -33,12 +33,12 @@ const UserReviews = () => {
         <div className="user-reviews-data-container">
 
         {reviewsArr.map(review => {
-            console.log("REVIEW", review)
+
             return <div className="user-review-data">
 
                 <Link to={`/spots/${review.spotId}`}>{review.Spot.name}</Link>
                 <p>{review.Spot.address}{review.Spot.city}, {review.Spot.state}</p>
-                <p>{review.review}</p>
+                <p className="user-review-review">{review.review}</p>
                 <p>{review.stars} stars</p>
                 <button className="deleteButtonInReviews"
                      type="Delete"
