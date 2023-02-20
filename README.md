@@ -5,12 +5,12 @@ Currently you are able to sign up, login, create, edit and delete spots, and you
 able to create and delete reviews on each listing.
 
 The tools that I've used are:
-Javascript
-PostgreSQL
-Sequelize
-Express
-React
-Redux
+* Javascript
+* PostgreSQL
+* Sequelize
+* Express
+* React
+* Redux
 
 I am using a ripped (and flipped upside down) version of the AirBNB logo, including a replica of the dropdown menu button that I have created. Special feature that I added was an "add a review" button that will actually open the card with the textbox and additional features instead of the textbox remaining on the spot detail page.
 
